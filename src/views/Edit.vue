@@ -59,7 +59,7 @@ const route = useRoute();
 
 // Importation des composants
 import RichMarkdownEditor from '../components/RichMarkdownEditor.vue';
-import MarkdownEditor from '../components/MarkdownEditor.vue';
+//import MarkdownEditor from '../components/MarkdownEditor.vue';
 
 import pinFull from '/assets/webp/pin_plein.webp?url';
 import pinEmpty from '/assets/webp/pin_vide.webp?url';
