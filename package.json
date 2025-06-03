@@ -6,10 +6,11 @@
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc -b && vite build",
-    "build force": "vite build",
+    "build_force": "vite build",
     "preview": "vite preview",
     "sync": "npm run build && npx cap sync",
-    "android": "npx cap open android"
+    "android": "npx cap open android",
+    "android_icon": "cordova-res"
   },
   "dependencies": {
     "@capacitor/android": "^7.2.0",
