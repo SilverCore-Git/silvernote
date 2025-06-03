@@ -29,12 +29,11 @@
 
     </header>
 
-    <Search_bar class="fixed right-4 left-4 z-40" :style=" { top: `calc(4rem + ${top_p})` } " />
+    <Search_bar class="mb-4" :pt="top_p" :style=" { marginTop: `calc(4.5rem + ${top_p})` } " />
 
     <ul 
         v-if="all_tags && all_tags.length" 
-        class="flex flex-row justify-center items-center gap-1.5 max-w-[100%] mr-4 ml-4 whitespace-nowrap overflow-x-auto text-ellipsis scrollbar-none"
-        :style=" { marginTop: `calc(7.5rem + ${top_p})` } "
+        class="flex flex-row mr-4 ml-4 gap-1.5 whitespace-nowrap overflow-x-auto text-ellipsis scrollbar-none"
     >
 
         <li 
@@ -68,7 +67,10 @@
 
     </ul>
     
-    <ul v-else-if="all_tags" class="mt-30 flex flex-row justify-center items-center gap-1.5 max-w-[100%] mr-4 ml-4 whitespace-nowrap overflow-x-auto text-ellipsis scrollbar-none">
+    <ul 
+        v-else-if="all_tags" 
+        class="flex flex-row justify-center items-center gap-1.5 max-w-[100%] mr-4 ml-4 whitespace-nowrap overflow-x-auto text-ellipsis scrollbar-none"
+    >
         <li 
             class=" w-[20%] min-w-[70px]"
         >
@@ -84,7 +86,10 @@
         </li>
     </ul>
 
-    <ul v-else class="mt-30 flex flex-row justify-center items-center gap-1.5 max-w-[100%] mr-4 ml-4 whitespace-nowrap overflow-x-auto text-ellipsis scrollbar-none">
+    <ul 
+        v-else 
+        class="flex flex-row justify-center items-center gap-1.5 max-w-[100%] mr-4 ml-4 whitespace-nowrap overflow-x-auto text-ellipsis scrollbar-none"
+    >
         <Tags_item_loader />
         <Tags_item_loader />
         <Tags_item_loader />
@@ -149,8 +154,12 @@
 
         </div>
     
-        <div style="box-shadow: 0 0 15px #3636364f;" class="bg-[#FFF8F0] h-30 w-full z-50 fixed bottom-0">
-            <button @click="create_new_note" class="add-note-btn cursor-pointer flex items-center justify-center absolute right-4 left-4 bottom-8"><div class="add-note-svg"></div></button>
+        <div class="bg-transparent w-full z-50 fixed bottom-0">
+            <button 
+                style="box-shadow: 0 0 15px #3636364f;" 
+                @click="create_new_note" 
+                class="add-note-btn cursor-pointer flex items-center justify-center absolute right-4 left-4 bottom-4"
+            ><div class="add-note-svg"></div></button>
         </div>
 
     </div>
@@ -167,7 +176,7 @@
                 ref="inputRef"
                 type="text"
                 class="outline-none pl-1 w-full"
-                placeholder="Mon tag"
+                placeholder="Mon dossier"
             />
             </div>
 
@@ -210,7 +219,7 @@
                                         id: -1,
                                         pinned: false,
                                         simply_edit: false,
-                                        title: '',
+                                        title: 'Note sans titre',
                                         content: '',
                                         date: utils.date(),
                                         tags: []
@@ -247,7 +256,7 @@
         list_notes.value = await db.getAll('notes') || null;
         const sort_notes = list_notes.value.sort((a, b) => {
             if (a.pinned === b.pinned) {
-                return a.id - b.id;
+                return b.id - a.id;
             }
                 return a.pinned ? -1 : 1;
         });
@@ -293,7 +302,9 @@
     });
 
     watch(list_notes, async () => {
-        await init_notes()
+        setTimeout(async () => {
+            await init_notes()
+        }, 500)
         console.log("Les notes ont été modifiées, tri en cours...");
     }, { deep: true });
 

@@ -36,6 +36,7 @@
       class="text-3xl mb-3 font-bold" 
       type="text" 
       placeholder="Titre..." 
+      ref="title"
       v-model="note.title"
       @input="save_title"
     />
@@ -88,6 +89,8 @@ const note = ref<{
     tags: []
 });
 
+const title = ref<HTMLInputElement | null>(null);
+
 const save_title = () => {
   if (note.value.title) {
     db.saveTitle(note.value.title, Number(route.query.id))
@@ -96,6 +99,7 @@ const save_title = () => {
 
 // Fonction pour récupérer la note
 onMounted(async () => {
+  title.value?.focus();
   const fetchedNote = await db.getNote(Number(route.query.id));
   if (fetchedNote) {
     note.value = fetchedNote;

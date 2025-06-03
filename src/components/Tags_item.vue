@@ -16,7 +16,7 @@
              hover:bg-[#f28c28]"
       @click="emit('tag-created', tag_name)"
     >
-        <span>Créer mon tag</span>
+        <span>Créer mon dossier</span>
     </button>
 
     <div 
