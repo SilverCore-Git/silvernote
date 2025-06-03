@@ -24,7 +24,7 @@
     <div 
         v-if="filteredNotes.length && searchQuery != ''" 
         class="mt-4 space-y-2 w-[100%] relative overflow-x-auto pr-4" 
-        :style="{ maxHeight: `calc(100vh - 3.5rem - ${props.pt} - 5.3rem)` }"
+        :style="{ maxHeight: `calc(100vh - 3.5rem - ${props.pt} - 5.3rem)`, minHeight: `calc(100vh - 3.5rem - ${props.pt} - 5.3rem)` }"
     >
 
       <div 
@@ -38,7 +38,7 @@
             v-html="highlightMatch(note.title, searchQuery)"
         ></h3>
         <p 
-            class="text-sm max-h-20 text-gray-600 overflow-x-auto"
+            class="text-sm max-h-20 text-gray-600 overflow-hidden"
             v-html="highlightMatch(note.content, searchQuery)"
         ></p>
 
