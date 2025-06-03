@@ -3,7 +3,9 @@
 
     <header 
         style="font-family: 'Montserrat', sans-serif; box-shadow: 0 0 15px #36363681;" 
-        class="mb-5 top-0 left-0 w-full h-14 text-2xl bg-[#F28C28] text-white font-bold flex items-center justify-center fixed z-50"
+        class="mb-5 top-0 left-0 w-full text-2xl bg-[#F28C28] text-white font-bold flex items-center justify-center fixed z-50"
+        :class="`pt-[${top_p}]`"
+        :style=" { height: `calc(3.5rem + ${top_p})` } "
     >
         
         <h1 class="absolute left-4">SilverNote</h1>
@@ -12,8 +14,9 @@
         <transition name="fade-slide">
             <div 
                 v-if="if_open_dropdown"
-                class="dropdown absolute top-14 right-3 bg-[#F28C28] 
+                class="dropdown absolute right-3 bg-[#F28C28] 
                     z-50 min-w-[150px] w-[40%] flex flex-col justify-center items-center p-3"
+                :style=" { top: `calc(3.5rem + ${top_p})` } "
             >
                 <ul class="text-xl">
                     <li @click="router.push('/settings')">Paramètre</li>
@@ -26,9 +29,13 @@
 
     </header>
 
-    <Search_bar class="fixed right-4 left-4 top-16 z-40" />
+    <Search_bar class="fixed right-4 left-4 z-40" :style=" { top: `calc(4rem + ${top_p})` } " />
 
-    <ul v-if="all_tags && all_tags.length" class="mt-30 flex flex-row justify-center items-center gap-1.5 max-w-[100%] mr-4 ml-4 whitespace-nowrap overflow-x-auto text-ellipsis scrollbar-none">
+    <ul 
+        v-if="all_tags && all_tags.length" 
+        class="flex flex-row justify-center items-center gap-1.5 max-w-[100%] mr-4 ml-4 whitespace-nowrap overflow-x-auto text-ellipsis scrollbar-none"
+        :style=" { marginTop: `calc(7.5rem + ${top_p})` } "
+    >
 
         <li 
             v-for="(tag, index) in all_tags"
@@ -185,6 +192,7 @@
 
     import db from '../assets/ts/database';
     import back from '../assets/ts/backend_link';
+    import os from '../assets/ts/os';
 
     import Danger_card from '../components/Danger_card.vue';
     import Note_card from '../components/Note_card.vue';
@@ -208,6 +216,8 @@
         date: string
         tags: string[]
     };
+
+    const top_p: string = os.isAndroid() ?  '24px' : os.isIOS() ? '44px' : '0px';
 
     const tip: boolean = false;
     const tag_name = ref<string>('');
