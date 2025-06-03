@@ -105,10 +105,10 @@
             v-if="if_danger_card" 
             style="box-shadow: 0 0 15px #3636364f;" 
             class="mt-4"
-            :title="Danger_card_props.title"
-            :btn="Danger_card_props.btn"
-            :href="Danger_card_props.href"
-            :content="Danger_card_props.message" 
+            :title="Danger_card_props?.title"
+            :btn="Danger_card_props?.btn"
+            :href="Danger_card_props?.href"
+            :content="Danger_card_props?.message" 
         />
 
         <div class="overflow-y-auto mt-4">
@@ -192,7 +192,8 @@
 
     import db from '../assets/ts/database';
     import back from '../assets/ts/backend_link';
-    import os from '../assets/ts/os';
+    //import os from '../assets/ts/os';
+    import utils from '../assets/ts/utils';
 
     import Danger_card from '../components/Danger_card.vue';
     import Note_card from '../components/Note_card.vue';
@@ -203,8 +204,20 @@
     
     const router = useRouter();
 
-    const create_new_note = (): void => {
-        router.push('/edit')
+    const create_new_note = async (): Promise<void> => {
+
+        const note = await db.create({ 
+                                        id: -1,
+                                        pinned: false,
+                                        simply_edit: false,
+                                        title: '',
+                                        content: '',
+                                        date: utils.date(),
+                                        tags: []
+                                    });
+
+        router.push(`/edit?id=${note.id}&pinned=false&simply_edit=false`);
+
     };
 
     interface Note {
@@ -217,12 +230,12 @@
         tags: string[]
     };
 
-    const top_p: string = os.isAndroid() ?  '24px' : os.isIOS() ? '44px' : '0px';
+    const top_p: string = '0px'; // os.isAndroid() ?  '24px' : os.isIOS() ? '44px' : '0px' => a revoir
 
     const tip: boolean = false;
     const tag_name = ref<string>('');
     const if_danger_card: boolean = back.info_message() ? true : false;
-    const Danger_card_props: { message: string, title: string, btn: boolean, href: string } = back.info_message();
+    const Danger_card_props: { message: string, title: string, btn: boolean, href: string } | void = back.info_message();
 
     const list_notes = ref<Note[]>();
     let all_tags: { id: number, name: string, active: boolean }[] | undefined  = undefined;

@@ -15,8 +15,8 @@
 <script setup lang='ts'>
 
 const props = withDefaults(defineProps<{
-  title: string,
-  content: string,
+  title?: string,
+  content?: string,
   href?: string,
   btn?: boolean
 }>(), {

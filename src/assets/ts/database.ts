@@ -135,7 +135,7 @@ class Database {
 
     };
 
-    async create(note: Note): Promise<void> {
+    async create(note: Note): Promise<{ id: number }> {
 
         const db = await this.dbPromise;
         const all_notes = await db.getAll('notes');
@@ -143,6 +143,8 @@ class Database {
         note.id = all_notes.length + 1;
 
         await db.add('notes', note);
+
+        return { id: note.id }
 
     };
 

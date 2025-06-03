@@ -34,8 +34,8 @@ const db = {
 }
 
 
-const info_message = (): { message: string, title: string, btn: boolean, href: string } | boolean => {
-    return false
+const info_message = (): { message: string, title: string, btn: boolean, href: string } | void => {
+
     // return { 
     //           message: "SilverNote est actuelement en maintenance, l'app fonctionera en local seulement pendant cet periode.", 
     //           title: "Maintenance",
