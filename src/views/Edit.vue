@@ -37,6 +37,7 @@
       type="text" 
       placeholder="Titre..." 
       v-model="note.title"
+      @input="save_title"
     />
 
     <RichMarkdownEditor :simplify_text="if_edit_note_active" :id="note.id" />
@@ -86,6 +87,12 @@ const note = ref<{
     id: -1,
     tags: []
 });
+
+const save_title = () => {
+  if (note.value.title) {
+    db.saveTitle(note.value.title, Number(route.query.id))
+  }
+}
 
 // Fonction pour récupérer la note
 onMounted(async () => {

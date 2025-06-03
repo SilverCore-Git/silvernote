@@ -104,6 +104,18 @@ class Database {
 
     };
 
+    async saveTitle(title: string, id: number): Promise<void> {
+
+        const db = await this.dbPromise;
+        const note = await db.get('notes', id);
+
+        if (note) {
+        note.title = title;
+        await db.put('notes', note);
+        };
+
+    };
+
     async togle_pinned(id: number): Promise<void> {
 
         const db = await this.dbPromise;
