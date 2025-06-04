@@ -9,6 +9,8 @@
     >
         
         <h1 class="absolute left-4">SilverNote</h1>
+
+        <div class="saving-svg absolute right-14" @click="saving_notes"></div>
         <div class="ellipsis-svg absolute right-4" @click="if_open_dropdown=!if_open_dropdown"></div>
 
         <transition name="fade-slide">
@@ -293,6 +295,9 @@
         if_open_create_tag.value = false
     };
 
+    const saving_notes = async (): Promise<void> => {
+        
+    };
 
     onMounted(async () => {
         setTimeout(async () => {
@@ -339,6 +344,18 @@
         background-repeat: no-repeat;
         background-position: center;
         background-image: url('../assets/svgs/ellipsis.svg');
+        filter: invert(1);
+        transition: all 0.3s ease;
+    }
+
+    .saving-svg {
+        cursor: pointer;
+        width: 24px;
+        height: 24px;
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+        background-image: url('../assets/svgs/saving_disc.svg');
         filter: invert(1);
         transition: all 0.3s ease;
     }
