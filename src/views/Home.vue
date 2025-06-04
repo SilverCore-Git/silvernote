@@ -296,7 +296,7 @@
     };
 
     const saving_notes = async (): Promise<void> => {
-        
+        await back.saving_all(await db.getAll('notes'), await db.getAll('tags'));
     };
 
     onMounted(async () => {

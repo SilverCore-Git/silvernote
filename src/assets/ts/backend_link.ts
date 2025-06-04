@@ -1,4 +1,22 @@
 
+
+interface Note {
+    id: number;
+    pinned: boolean;
+    simply_edit: boolean;
+    title: string;
+    content: string;
+    date: string;
+    tags: string[];
+};
+
+interface Tag {
+    id: number;
+    active: boolean;
+    name: string;
+};
+
+
 const db = {
   notes: [
     { id: 1, pinned: false, simply_edit: true, title: "Note 1", content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.", date: "01 Janvier 2025", tags: ["tag3", "tag5"] },
@@ -44,9 +62,29 @@ const info_message = (): { message: string, title: string, btn: boolean, href: s
     //         };
 };
 
+const saving_all = async (Notes: Note[], Tags: Tag[]): Promise<void> => {
+
+  const res = await fetch('https://api.silvernote.fr/api/...', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ Notes, Tags }),
+  });
+
+  if (res.error) {
+    // action si erreur
+  }
+
+  if (res.ok) {
+    // action apres sauvegarde
+  }
+
+}
 
 
 export default {
     db,
-    info_message
+    info_message,
+    saving_all
 }
