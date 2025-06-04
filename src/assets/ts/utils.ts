@@ -1,17 +1,8 @@
 import type { Ref } from 'vue';
 
+import type { Note } from './type';
 import db from './database';
 
-
-interface Note {
-    id: number;
-    pinned: boolean;
-    simply_edit: boolean;
-    title: string;
-    content: string;
-    date: string;
-    tags: string[];
-};
 
 class utils {
 

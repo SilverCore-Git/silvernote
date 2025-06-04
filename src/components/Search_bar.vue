@@ -63,6 +63,7 @@ import { computed, onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 import db from '../assets/ts/database';
+import type { Note } from '../assets/ts/type';
 
 const props = defineProps<{
   pt?: string
@@ -72,15 +73,7 @@ const search_input = ref<HTMLInputElement | null>(null);
 
 const router = useRouter();
 const searchQuery = ref('');
-const list_notes = ref<{
-        id: number
-        pinned: boolean
-        simply_edit: boolean
-        title: string
-        content: string
-        date: string
-        tags: string[]
-    }[]>([]);
+const list_notes = ref<Note[]>([]);
 
 const init_notes = async () => {
     list_notes.value = await db.getAll('notes');

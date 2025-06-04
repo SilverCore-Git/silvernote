@@ -2,7 +2,7 @@
 
   <header class="flex flex-row pt-4 relative">
 
-    <div class="left-arrow absolute left-4" @click="router.push('/')"></div>
+    <div class="left-arrow absolute left-4 cursor-pointer" @click="router.push('/')"></div>
 
     <div class="flex flex-row gap-4 absolute right-4">
 
@@ -55,6 +55,7 @@ import { ref, onMounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 
 import db from '../assets/ts/database';
+import type { Note } from '../assets/ts/type';
 
 const router = useRouter();
 const route = useRoute();
@@ -73,14 +74,7 @@ const if_pin_active = ref(route.query.pinned == "true");
 const if_edit_note_active = ref(route.query.simply_edit == 'true');
 
 // Initialisation de la note
-const note = ref<{
-        id: number
-        pinned: boolean
-        simply_edit: boolean
-        title: string
-        content: string
-        tags: string[]
-  }>({
+const note = ref<Note>({
     title: '',
     content: '',
     pinned: false,

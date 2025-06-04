@@ -10,8 +10,22 @@
         
         <h1 class="absolute left-4">SilverNote</h1>
 
-        <div class="saving-svg absolute right-14" @click="saving_notes"></div>
-        <div class="ellipsis-svg absolute right-4" @click="if_open_dropdown=!if_open_dropdown"></div>
+        <div 
+            class="reload-svg absolute right-24" 
+            :class="{ rotating: isRotating }" 
+            @click="reload_list"
+        ></div>
+
+        <div 
+            class="saving-svg absolute right-14" 
+            :class="{ 'jump': isJumping }" 
+            @click="triggerJump"
+        ></div>
+
+        <div 
+            class="ellipsis-svg absolute right-4" 
+            @click="if_open_dropdown=!if_open_dropdown"
+        ></div>
 
         <transition name="fade-slide">
             <div 
@@ -206,6 +220,7 @@
     //import os from '../assets/ts/os';
     import utils from '../assets/ts/utils';
     import { init_notes } from '../assets/ts/utils';
+    import type { Note } from '../assets/ts/type';
 
     import Danger_card from '../components/Danger_card.vue';
     import Note_card from '../components/Note_card.vue';
@@ -232,16 +247,6 @@
 
     };
 
-    interface Note {
-        id: number
-        pinned: boolean
-        simply_edit: boolean
-        title: string
-        content: string
-        date: string
-        tags: string[]
-    };
-
     const top_p: string = '0px'; // os.isAndroid() ?  '24px' : os.isIOS() ? '44px' : '0px' => a revoir
 
     const tip: boolean = false;
@@ -250,8 +255,9 @@
     const Danger_card_props: { message: string, title: string, btn: boolean, href: string } | void = back.info_message();
 
     const list_notes = ref<Note[]>([]);
-    let all_tags: { id: number, name: string, active: boolean }[] | undefined  = undefined;
+    let all_tags = ref<{ id: number, name: string, active: boolean }[] | undefined>(undefined);
 
+    const isRotating = ref(false);
     const if_open_dropdown = ref<boolean>(false);
     const if_open_create_tag = ref<boolean>(false);
 
@@ -259,31 +265,34 @@
 
     const add_tag_filter = async (id: number): Promise<void> => {
 
-        if (all_tags?.[id]) {
-            all_tags[id].active = !all_tags[id].active;
-        }
+        id = id - 1;
 
-        const activeTags = all_tags
-                ?.filter(tag => tag.active)
-                .map(tag => tag.name);
-
-        if (activeTags?.length === 0) {
-            list_notes.value = list_notes.value;
+        if (all_tags.value?.[id].active) {
+            all_tags.value[id].active = false;
+            list_notes.value = await db.getAll('notes');
             return;
+        };
+
+        if (all_tags.value?.[id]) {
+            all_tags.value[id].active = !all_tags.value[id].active;
         }
 
-        const notes: Note[] = list_notes.value ?? [];
+        const activeTags = all_tags.value
+                ?.filter(tag => tag.active)
+                .map(tag => tag.id);
 
-        list_notes.value = notes.filter(note =>
-            note.tags.some(tag => activeTags?.includes(tag))
-        );
+        if (activeTags?.length === 0) return;
+
+        const notes = await db.getAll('notes');
+        list_notes.value = notes.filter(note => note.tags.some(tag => activeTags?.includes(tag)));
+
     };
 
     const create_tag = async (tagName: string): Promise<void> => {
         console.log('création du tag :', tagName)
         tag_name.value = '';
         await db.create_tag({ id: -1, name: tagName, active: false });
-        all_tags = await db.getAll('tags');
+        all_tags.value = await db.getAll('tags');
         if_open_create_tag.value = false
     };
 
@@ -291,8 +300,39 @@
         await back.saving_all(await db.getAll('notes'), await db.getAll('tags'));
     };
 
+    const reload_list = async () => {
+
+        if (isRotating.value) return;
+
+        isRotating.value = true;
+
+        setTimeout(async () => {
+            await init_notes(list_notes);
+            console.log('Rechargement des notes...')
+            setTimeout(() => {
+                isRotating.value = false;
+            }, 400);
+        }, 400);
+
+    };
+
+    const isJumping = ref(false);
+
+    const triggerJump = () => {
+
+        isJumping.value = false;
+
+        requestAnimationFrame(() => {
+            isJumping.value = true;
+            setTimeout(() => {
+            isJumping.value = false;
+            }, 500);
+        });
+        
+    };
+
     onMounted(async () => {
-        all_tags = await db.getAll('tags');
+        all_tags.value = await db.getAll('tags');
         await init_notes(list_notes);
     });
 
@@ -300,9 +340,11 @@
 
     watch(list_notes, async () => {
 
-        console.log('Tag active ?', all_tags?.some(tag => tag.active))
-        
-        if (!all_tags?.some(tag => tag.active)) {
+        const actives_tags = all_tags.value?.filter(tag => tag.active);
+
+        console.log('Tag active ?', all_tags.value?.some(tag => tag.active), '=>', actives_tags?.map(tag => tag.name));
+
+        if (!all_tags.value?.some(tag => tag.active)) {
             await init_notes(list_notes);
         };
 
@@ -356,6 +398,55 @@
         background-image: url('../assets/svgs/saving_disc.svg');
         filter: invert(1);
         transition: all 0.3s ease;
+    }
+        
+    .reload-svg {
+        cursor: pointer;
+        width: 24px;
+        height: 24px;
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+        background-image: url('../assets/svgs/reload.svg');
+        filter: invert(1);
+    }
+
+    .rotating {
+        animation: rotate 0.8s linear infinite;
+    }
+
+    @keyframes rotate {
+        0% {
+            transform: rotate(0deg);
+        }
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+
+    @keyframes squashJump {
+        0% {
+            transform: scale(1, 1) translateY(0);
+        }
+        10% {
+            transform: scale(1.066, 0.933) translateY(0);
+        }
+        30% {
+            transform: scale(0.967, 1.033) translateY(-10px); 
+        }
+        50% {
+            transform: scale(1, 1) translateY(0);
+        }
+        70% {
+            transform: scale(1.1, 0.9);
+        }
+        100% {
+            transform: scale(1, 1); 
+        }
+    }
+
+    .jump {
+        animation: squashJump 0.5s ease-out;
     }
 
     .dropdown {
