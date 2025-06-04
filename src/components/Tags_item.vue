@@ -48,15 +48,6 @@ const inputRef = ref<HTMLInputElement | null>(null);
 
 const tag_name = ref<string>('');
 
-
-const focusInputIfNeeded = () => {
-  if (props.name === 'create_tag' && inputRef.value) {
-    inputRef.value.focus();
-  }
-};
-
-onMounted(focusInputIfNeeded);
-
 onMounted(() => {
   if (props.name === 'create_tag' && inputRef.value) {
     inputRef.value.focus();

@@ -1,3 +1,17 @@
+import type { Ref } from 'vue';
+
+import db from './database';
+
+
+interface Note {
+    id: number;
+    pinned: boolean;
+    simply_edit: boolean;
+    title: string;
+    content: string;
+    date: string;
+    tags: string[];
+};
 
 class utils {
 
@@ -20,4 +34,18 @@ class utils {
 
 }
 
+const init_notes = async (list_notes: Ref<Note[]>): Promise<void> => {
+    list_notes.value = await db.getAll('notes') || null;
+    const sort_notes = list_notes.value.sort((a: Note, b: Note) => {
+        if (a.pinned === b.pinned) {
+            return b.id - a.id;
+        }
+            return a.pinned ? -1 : 1;
+    });
+    list_notes.value = sort_notes;
+};
+
 export default new utils();
+export {
+    init_notes
+}

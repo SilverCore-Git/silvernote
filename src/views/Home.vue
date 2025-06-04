@@ -205,6 +205,7 @@
     import back from '../assets/ts/backend_link';
     //import os from '../assets/ts/os';
     import utils from '../assets/ts/utils';
+    import { init_notes } from '../assets/ts/utils';
 
     import Danger_card from '../components/Danger_card.vue';
     import Note_card from '../components/Note_card.vue';
@@ -248,22 +249,13 @@
     const if_danger_card: boolean = back.info_message() ? true : false;
     const Danger_card_props: { message: string, title: string, btn: boolean, href: string } | void = back.info_message();
 
-    const list_notes = ref<Note[]>();
+    const list_notes = ref<Note[]>([]);
     let all_tags: { id: number, name: string, active: boolean }[] | undefined  = undefined;
 
     const if_open_dropdown = ref<boolean>(false);
     const if_open_create_tag = ref<boolean>(false);
 
-    const init_notes = async (): Promise<void> => {
-        list_notes.value = await db.getAll('notes') || null;
-        const sort_notes = list_notes.value.sort((a, b) => {
-            if (a.pinned === b.pinned) {
-                return b.id - a.id;
-            }
-                return a.pinned ? -1 : 1;
-        });
-        list_notes.value = sort_notes;
-    };
+
 
     const add_tag_filter = async (id: number): Promise<void> => {
 
@@ -300,18 +292,24 @@
     };
 
     onMounted(async () => {
-        setTimeout(async () => {
-            all_tags = await db.getAll('tags');
-            await init_notes();
-        }, 500);
+        all_tags = await db.getAll('tags');
+        await init_notes(list_notes);
     });
 
+
+
     watch(list_notes, async () => {
-        setTimeout(async () => {
-            await init_notes()
-        }, 500)
+
+        console.log('Tag active ?', all_tags?.some(tag => tag.active))
+        
+        if (!all_tags?.some(tag => tag.active)) {
+            await init_notes(list_notes);
+        };
+
         console.log("Les notes ont été modifiées, tri en cours...");
+
     }, { deep: true });
+
 
 </script>
 

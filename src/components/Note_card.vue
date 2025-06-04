@@ -56,9 +56,9 @@ const props = defineProps<{
 
 const if_pin_active = ref(props.pinned)
 
-const change_pin_state = () => {
-    if_pin_active.value = !if_pin_active.value;
-    db.togle_pinned(props.id);
+const change_pin_state = async () => {
+  await db.togle_pinned(props.id);
+  if_pin_active.value = !if_pin_active.value;
 };
 
 const open_note = () => {
