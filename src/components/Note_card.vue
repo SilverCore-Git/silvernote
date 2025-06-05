@@ -9,29 +9,43 @@
 
     <div class="absolute right-0 top-3 h-full flex flex-row-reverse gap-1.5">
 
-      <div
-        class="ellipsis "
-        @click.stop="dropdown = !dropdown"
-      ></div>
+      <div ref="dropdown_rootRef" class="relative">
 
-      <transition name="fade-slide">
+        <div
+          class="ellipsis"
+          @click.stop="dropdown = !dropdown"
+        ></div>
 
-        <div 
-          class=" absolute top-8 right-1 bg-red-600 p-2 min-w-full min-h-full z-30"
-          v-if="dropdown"
-        >
+        <transition name="fade-slide">
 
-          <ul>
+          <div 
+            class=" absolute top-8.5 right-0 
+                  bg-[#FFF8F0] border-[#3B3B3B] 
+                  border-t-0 border-1
+                  p-2 pr-3 pl-3 
+                  min-w-full min-h-full z-30
+                  "
+            style="border-radius: 10px; border-top-left-radius: 20px; border-top-right-radius: 0px;"
+            v-if="dropdown"
+          >
 
-            <li>Ouvrir</li>
-            <li>Envoyer</li>
-            <li>Suprimer</li>
+            <ul>
 
-          </ul>
+              <li @click.stop="open_note" >Ouvrir</li>
+              <li @click.stop="change_pin_state; dropdown = false"  class="mt-1" >{{ if_pin_active ? 'Désépingler' : 'Epingler' }}</li>
+              <li @click.stop="send_note; dropdown = false"  class="mt-1" >Envoyer</li>
 
-        </div>
+              <hr class=" -mr-3 -ml-3 mt-2 text-[#3B3B3B]">
 
-      </transition>
+              <li @click.stop="delete_note(1)" class="text-red-600" >Supprimer</li>
+
+            </ul>
+
+          </div>
+
+        </transition>
+
+      </div>
 
       <!-- <div
         class="bin"
@@ -63,12 +77,22 @@
 
   </div>
 
+  <ConfirmDialog
+    :visible="showDialog"
+    title="Confirmation"
+    message="Voulez-vous vraiment supprimer cette note ?"
+    @confirm="delete_note(2)"
+    @cancel="showDialog = false"
+  />
+
 </template>
 
 <script setup lang="ts">
 
-import { onMounted, ref, watch } from 'vue';
+import { onMounted, onUnmounted, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
+
+import ConfirmDialog from './ConfirmDialog.vue';
 
 import db from '../assets/ts/database';
 import type { Tag } from '../assets/ts/type';
@@ -88,19 +112,37 @@ const props = defineProps<{
   id: number
 }>()
 
+const showDialog = ref<boolean>(false);
 const all_tags = ref<Tag[]>([]);
 let tags: any = null;
 const if_pin_active = ref<boolean>(props.pinned)
 const dropdown = ref<boolean>(false);
+const dropdown_rootRef = ref<HTMLElement | null>(null);
 
 const change_pin_state = async () => {
   await db.togle_pinned(props.id);
   if_pin_active.value = !if_pin_active.value;
 };
 
+const send_note = (): void => {
+
+};
+
+const delete_note = async (state: number): Promise<void> => {
+  
+  if (state == 1) {
+    showDialog.value = true;
+  }
+
+  else if (state == 3) {
+
+  };
+  //await db.delete(props.id);
+};
+
 const open_note = () => {
   router.push(`/edit?id=${props.id}&pinned=${if_pin_active.value}&simply_edit=${props.simply_edit}`)
-}
+};
 
 onMounted(async () => {
   all_tags.value = await db.getAll('tags');
@@ -109,7 +151,21 @@ onMounted(async () => {
 
 watch(() => props.pinned, (newVal) => {
   if_pin_active.value = newVal
-})
+});
+
+const handleClickOutside = (event: MouseEvent) => {
+  if (dropdown_rootRef.value && !dropdown_rootRef.value.contains(event.target as Node)) {
+    dropdown.value = false;
+  }
+};
+
+onMounted(() => {
+  document.addEventListener('click', handleClickOutside);
+});
+
+onUnmounted(() => {
+  document.removeEventListener('click', handleClickOutside);
+});
 
 </script>
 
@@ -144,5 +200,24 @@ watch(() => props.pinned, (newVal) => {
   background-repeat: no-repeat;
   background-position: center;
 }
+
+
+
+    .fade-slide-enter-active,
+    .fade-slide-leave-active {
+        transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+
+    .fade-slide-enter-from,
+    .fade-slide-leave-to {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    .fade-slide-enter-to,
+    .fade-slide-leave-from {
+        opacity: 1;
+        transform: translateY(0);
+    }
 
 </style>
