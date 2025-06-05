@@ -180,7 +180,7 @@
 
     </div>
 
-    <div  v-if="if_open_create_tag">
+    <div @click="if_open_create_tag = false" v-if="if_open_create_tag">
 
         <div  class="fixed inset-0 bg-black/50 z-100"></div>
 
@@ -199,7 +199,7 @@
             <button
                 class="p-1 text-center w-full border-2 bg-white/80 text-[#F28C28] font-bold cursor-pointer rounded-[15px] shadow-md
                         hover:bg-[#f28c28]"
-                @click="create_tag(tag_name)"
+                @click.stop="create_tag(tag_name)"
             >
                 <span>Créer mon tag</span>
             </button>
@@ -289,6 +289,7 @@
     };
 
     const create_tag = async (tagName: string): Promise<void> => {
+        if (!tagName) return;
         console.log('création du tag :', tagName)
         tag_name.value = '';
         await db.create_tag({ id: -1, name: tagName, active: false });
@@ -343,13 +344,13 @@
 
         const actives_tags = all_tags.value?.filter(tag => tag.active);
 
-        console.log('Tag active ?', all_tags.value?.some(tag => tag.active), '=>', actives_tags?.map(tag => tag.name));
+        //console.log('Tag active ?', all_tags.value?.some(tag => tag.active), '=>', actives_tags?.map(tag => tag.name));
 
         if (!all_tags.value?.some(tag => tag.active)) {
             await init_notes(list_notes);
         };
 
-        console.log("Les notes ont été modifiées, tri en cours...");
+        //console.log("Les notes ont été modifiées, tri en cours...");
 
     }, { deep: true });
 
