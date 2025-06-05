@@ -33,7 +33,7 @@
 
               <li @click.stop="open_note" >Ouvrir</li>
               <li @click.stop="change_pin_state; dropdown = false"  class="mt-1" >{{ if_pin_active ? 'Désépingler' : 'Epingler' }}</li>
-              <li @click.stop="send_note"  class="mt-1" >Partager</li>
+              <li @click.stop="share=!share"  class="mt-1" >Partager</li>
 
               <hr class=" -mr-3 -ml-3 mt-2 text-[#3B3B3B]">
 
@@ -85,6 +85,8 @@
     @cancel="showDialog = false"
   />
 
+  <share_menu :visible="share" />
+
 </template>
 
 <script setup lang="ts">
@@ -93,6 +95,7 @@ import { onMounted, onUnmounted, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 
 import ConfirmDialog from './ConfirmDialog.vue';
+import share_menu from './share_menu.vue';
 
 import db from '../assets/ts/database';
 import utils from '../assets/ts/utils';
@@ -119,11 +122,14 @@ let tags: any = null;
 const if_pin_active = ref<boolean>(props.pinned)
 const dropdown = ref<boolean>(false);
 const dropdown_rootRef = ref<HTMLElement | null>(null);
+const share = ref<boolean>(true);
 
 const change_pin_state = async () => {
   await db.togle_pinned(props.id);
   if_pin_active.value = !if_pin_active.value;
 };
+
+
 
 const send_note = async (): Promise<void> => {
 
