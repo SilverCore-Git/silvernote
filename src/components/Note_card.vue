@@ -5,7 +5,7 @@
     style="border-radius: 15px;"
     @click="open_note"
   > 
-    <p class="font-bold text-xl w-[80%] whitespace-nowrap overflow-hidden text-ellipsis">{{ title }}</p>
+    <p class="font-bold text-xl w-[80%] whitespace-nowrap overflow-hidden text-ellipsis">{{ utils.htmlToText(title) }}</p>
 
     <div class="absolute right-0 top-3 h-full flex flex-row-reverse gap-1.5">
 
@@ -33,7 +33,7 @@
 
               <li @click.stop="open_note" >Ouvrir</li>
               <li @click.stop="change_pin_state; dropdown = false"  class="mt-1" >{{ if_pin_active ? 'Désépingler' : 'Epingler' }}</li>
-              <li @click.stop="send_note; dropdown = false"  class="mt-1" >Envoyer</li>
+              <li @click.stop="send_note"  class="mt-1" >Partager</li>
 
               <hr class=" -mr-3 -ml-3 mt-2 text-[#3B3B3B]">
 
@@ -67,7 +67,7 @@
     <p 
       class="text-mb mb-3 w-[65%] whitespace-nowrap overflow-hidden text-ellipsis"
     >
-      {{ content }}
+      {{ utils.htmlToText(content) }}
     </p>
 
     <div class="absolute left-1 bottom-1 w-[60%] whitespace-nowrap overflow-x-auto text-ellipsis scrollbar-none">
@@ -95,6 +95,7 @@ import { useRouter } from 'vue-router';
 import ConfirmDialog from './ConfirmDialog.vue';
 
 import db from '../assets/ts/database';
+import utils from '../assets/ts/utils';
 import type { Tag } from '../assets/ts/type';
 
 import pinFull from '/assets/webp/pin_plein.webp?url';
@@ -124,7 +125,42 @@ const change_pin_state = async () => {
   if_pin_active.value = !if_pin_active.value;
 };
 
-const send_note = (): void => {
+const send_note = async (): Promise<void> => {
+
+  const text = encodeURIComponent(
+
+`Je te partage ma note : ${ await utils.htmlToText(props.title) }
+\n
+${ await utils.htmlToText(props.content) }
+\n
+Envoyé via www.silvernote.fr`
+
+  );
+
+  const fullUrl = `https://wa.me/?text=${text}`;
+  window.open(fullUrl, '_blank');
+
+  // if (navigator.share) {
+
+  //   try {
+
+  //     await navigator.share({
+  //       title: props.title,
+  //       text: props.content,
+  //       url: window.location.href,
+  //     });
+
+  //     console.log('Partagé avec succès');
+
+  //   } catch (err) {
+
+  //     console.error('Erreur de partage', err);
+
+  //   }
+
+  // } else {
+  //   alert("Le partage n'est pas supporté sur ce navigateur.");
+  // };
 
 };
 
