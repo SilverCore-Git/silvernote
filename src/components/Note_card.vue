@@ -1,7 +1,7 @@
 <template>
 
   <div
-    class="note-card bg-[#FFF8F0] mr-4 ml-4 text-[#3B3B3B] p-3 border-[#3B3B3B] border-2 relative cursor-pointer"
+    class="note-card bg-[#FFF8F0] mr-4 ml-4 text-[#3B3B3B] p-3 border-[#3B3B3B] border-2 relative cursor-pointer mb-3"
     style="border-radius: 15px;"
     @click="open_note"
   > 

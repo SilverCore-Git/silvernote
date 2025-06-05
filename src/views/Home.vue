@@ -140,7 +140,7 @@
                     <Note_card 
                         :id="note.id"
                         :pinned="note.pinned"
-                        class="mb-3" :title="note.title" 
+                        :title="note.title" 
                         :content="note.content" 
                         :date="note.date"
                         :tags="note.tags.map(tag => Number(tag))"
