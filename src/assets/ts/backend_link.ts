@@ -57,9 +57,9 @@ const saving_all = async (Notes: Note[], Tags: Tag[]): Promise<void> => {
     body: JSON.stringify({ Notes, Tags }),
   });
 
-  if (res.error) {
-    // action si erreur
-  }
+  // if (res.error) {
+  //   // action si erreur
+  // }
 
   if (res.ok) {
     // action apres sauvegarde

@@ -79,6 +79,7 @@ const note = ref<Note>({
     content: '',
     pinned: false,
     simply_edit: false,
+    date: '',
     id: -1,
     tags: []
 });

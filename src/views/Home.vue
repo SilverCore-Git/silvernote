@@ -19,7 +19,7 @@
         <div 
             class="saving-svg absolute right-14" 
             :class="{ 'jump': isJumping }" 
-            @click="triggerJump"
+            @click="saving_notes"
         ></div>
 
         <div 
@@ -143,7 +143,7 @@
                         class="mb-3" :title="note.title" 
                         :content="note.content" 
                         :date="note.date"
-                        :tags="note.tags"
+                        :tags="note.tags.map(tag => Number(tag))"
                         :simply_edit="note.simply_edit"
                     />
                 </li>
@@ -265,16 +265,16 @@
 
     const add_tag_filter = async (id: number): Promise<void> => {
 
-        id = id - 1;
+        const index = id - 1;
 
-        if (all_tags.value?.[id].active) {
-            all_tags.value[id].active = false;
+        if (all_tags.value?.[index].active) {
+            all_tags.value[index].active = false;
             list_notes.value = await db.getAll('notes');
             return;
         };
 
-        if (all_tags.value?.[id]) {
-            all_tags.value[id].active = !all_tags.value[id].active;
+        if (all_tags.value?.[index]) {
+            all_tags.value[index].active = !all_tags.value[index].active;
         }
 
         const activeTags = all_tags.value
@@ -284,7 +284,7 @@
         if (activeTags?.length === 0) return;
 
         const notes = await db.getAll('notes');
-        list_notes.value = notes.filter(note => note.tags.some(tag => activeTags?.includes(tag)));
+        list_notes.value = notes.filter(note => note.tags.some(tag => activeTags?.includes(Number(tag))));
 
     };
 
@@ -297,6 +297,7 @@
     };
 
     const saving_notes = async (): Promise<void> => {
+        triggerJump();
         await back.saving_all(await db.getAll('notes'), await db.getAll('tags'));
     };
 
