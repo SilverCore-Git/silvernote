@@ -9,11 +9,15 @@
 
     <div class="absolute right-0 top-3 h-full flex flex-row-reverse gap-1.5">
 
-      <div ref="dropdown_rootRef" class="relative">
+      <div 
+        ref="dropdown_rootRef" 
+        class="relative bg-red-600" 
+        @mouseover="console.log('caca')"
+        @mouseenter="console.log('caca2')"
+      >
 
         <div
           class="ellipsis"
-          @mouseover="dropdown = !dropdown"
         ></div>
 
         <transition name="fade-slide">
@@ -123,7 +127,7 @@ let tags: any = null;
 const if_pin_active = ref<boolean>(props.pinned)
 const dropdown = ref<boolean>(false);
 const dropdown_rootRef = ref<HTMLElement | null>(null);
-const share = ref<boolean>(true);
+const share = ref<boolean>(false);
 
 const change_pin_state = async () => {
   await db.togle_pinned(props.id);
