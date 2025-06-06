@@ -35,6 +35,7 @@
             <ul>
 
               <li @click.stop="open_note" >Ouvrir</li>
+              <li @click.stop="manage_tags=!manage_tags" >Dossiers</li>
               <li @click.stop="change_pin_state; dropdown = false"  class="mt-1" >{{ if_pin_active ? 'Désépingler' : 'Epingler' }}</li>
               <li @click.stop="share=!share"  class="mt-1" >Partager</li>
               <li @click.stop="delete_note(1)" class="text-red-600" >Supprimer</li>
@@ -91,6 +92,10 @@
     :content="content"
   />
 
+  <Tags_manager
+    v-if="manage_tags"
+  />
+
 </template>
 
 <script setup lang="ts">
@@ -100,6 +105,7 @@ import { useRouter } from 'vue-router';
 
 import ConfirmDialog from './ConfirmDialog.vue';
 import share_menu from './share_menu.vue';
+import Tags_manager from './tags_manager.vue';
 
 import db from '../assets/ts/database';
 import utils from '../assets/ts/utils';
@@ -123,6 +129,7 @@ const props = defineProps<{
 const showDialog = ref<boolean>(false);
 const if_pin_active = ref<boolean>(props.pinned)
 const share = ref<boolean>(false);
+const manage_tags = ref<boolean>(true);
 
 const all_tags = ref<Tag[]>([]);
 let tags: any = null;

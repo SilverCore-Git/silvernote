@@ -20,8 +20,8 @@
     >
 
       <div 
-        class="bg-white rounded-md p-4 m-3 mb-25 w-full max-w-sm text-sm flex items-center justify-center"
-        style="border-radius: 15px; box-shadow: 0 0 10px #333603;"
+        class="bg-[#FFF8F0] rounded-md p-4 m-3 mb-25 w-full max-w-sm text-sm flex items-center justify-center"
+        style="border-radius: 15px; box-shadow: 0 0 10px #3336;"
       >
 
         <ul class="flex flex-row items-center gap-5">
