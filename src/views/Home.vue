@@ -256,7 +256,7 @@
     const if_danger_card: boolean = back.info_message() ? true : false;
     const Danger_card_props: { message: string, title: string, btn: boolean, href: string } | void = back.info_message();
 
-    const list_notes = ref<Note[]>([]);
+    const list_notes = ref<Note[] | undefined>([]);
     let all_tags = ref<{ id: number, name: string, active: boolean }[] | undefined>(undefined);
 
     const isRotating = ref(false);
@@ -311,6 +311,7 @@
         isRotating.value = true;
 
         setTimeout(async () => {
+            list_notes.value = undefined;
             await init_notes(list_notes);
             console.log('Rechargement des notes...')
             setTimeout(() => {

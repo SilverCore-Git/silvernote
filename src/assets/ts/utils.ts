@@ -40,7 +40,7 @@ class utils {
 
 }
 
-const init_notes = async (list_notes: Ref<Note[]>): Promise<void> => {
+const init_notes = async (list_notes: Ref<Note[] | undefined>): Promise<void> => {
     list_notes.value = await db.getAll('notes') || null;
     const sort_notes = list_notes.value.sort((a: Note, b: Note) => {
         if (a.pinned === b.pinned) {

@@ -108,13 +108,15 @@
 
 <script setup lang="ts">
 
-import { onMounted, onUnmounted, ref, watch } from 'vue';
+import { onMounted, onUnmounted, ref, watch, defineProps } from 'vue';
 import { useRouter } from 'vue-router';
 
 import ConfirmDialog from './ConfirmDialog.vue';
 import share_menu from './share_menu.vue';
 import Tags_manager from './tags_manager.vue';
 
+import { list_notes } from '../views/Home.vue';
+import { init_notes } from '../assets/ts/utils';
 import db from '../assets/ts/database';
 import utils from '../assets/ts/utils';
 import type { Tag } from '../assets/ts/type';
@@ -153,6 +155,7 @@ const change_pin_state = async () => {
 
 const onTagsUpdate = (newTags: number[]) => {
   db.saveTags(newTags, props.id);
+  window.location.reload();
 };
 
 
