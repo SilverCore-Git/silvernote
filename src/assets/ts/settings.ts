@@ -1,27 +1,33 @@
+export interface SettingOption {
+  name: string;
+  type: string;
+  active: boolean;
+}
 
-interface Settings {
-    divers: { name: string, type: string }[],
-    advenced: { name: string, type: string }[],
-    dev_mod: { name: string, type: string }[],
+export interface Settings {
+  généraux: SettingOption[];
+  avancé: SettingOption[];
+  dev_mode: SettingOption[];
 }
 
 const settings: Settings = {
-  divers: [
-    { name: "Nom d'utilisateur", type: "text" },
-    { name: "Activer les notifications", type: "checkbox" },
-    { name: "Langue", type: "select" }
+  généraux: [
+    { name: "Nom d'utilisateur", type: "checkbox", active: false },
+    { name: "Activer les notifications", type: "checkbox", active: false },
+    { name: "Langue", type: "checkbox", active: false }
   ],
-  advenced: [
-    { name: "Taille du cache", type: "number" },
-    { name: "Mode sécurisé", type: "checkbox" },
-    { name: "Adresse IP", type: "text" }
+  avancé: [
+    { name: "Taille du cache", type: "checkbox", active: false },
+    { name: "Mode sécurisé", type: "checkbox", active: false },
+    { name: "Adresse IP", type: "checkbox", active: false },
+    { name: "Mode développeur", type: "checkbox", active: true }
   ],
-  dev_mod: [
-    { name: "Activer le debug", type: "checkbox" },
-    { name: "Afficher la console", type: "checkbox" },
-    { name: "Mode développeur", type: "switch" }
+  dev_mode: [
+    { name: "Activer le debug", type: "checkbox", active: false },
+    { name: "Afficher la console", type: "checkbox", active: false }
   ]
-}
+};
+
 
 
 export {
