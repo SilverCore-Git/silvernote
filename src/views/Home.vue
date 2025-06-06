@@ -25,8 +25,8 @@
         <div 
             class="ellipsis-svg absolute right-4" 
             @click="if_open_dropdown=!if_open_dropdown"
-                    @mouseover="console.log('caca')"
-        @mouseenter="console.log('caca2')"
+            @mouseover="console.log('caca')"
+            @mouseenter="console.log('caca2')"
         ></div>
 
         <transition name="fade-slide">
