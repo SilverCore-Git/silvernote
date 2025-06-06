@@ -11,9 +11,8 @@
 
       <div 
         ref="dropdown_rootRef" 
-        class="relative bg-red-600" 
-        @mouseover="console.log('caca')"
-        @mouseenter="console.log('caca2')"
+        class="relative"
+        @click.stop="dropdown = !dropdown"
       >
 
         <div
@@ -86,7 +85,7 @@
     @cancel="showDialog = false"
   />
 
-  <share_menu 
+  <share_menu
     :visible="share" 
     :title="title"
     :content="content"
@@ -122,12 +121,15 @@ const props = defineProps<{
 }>()
 
 const showDialog = ref<boolean>(false);
+const if_pin_active = ref<boolean>(props.pinned)
+const share = ref<boolean>(false);
+
 const all_tags = ref<Tag[]>([]);
 let tags: any = null;
-const if_pin_active = ref<boolean>(props.pinned)
+
 const dropdown = ref<boolean>(false);
 const dropdown_rootRef = ref<HTMLElement | null>(null);
-const share = ref<boolean>(false);
+
 
 const change_pin_state = async () => {
   await db.togle_pinned(props.id);
@@ -163,6 +165,9 @@ watch(() => props.pinned, (newVal) => {
 const handleClickOutside = (event: MouseEvent) => {
   if (dropdown_rootRef.value && !dropdown_rootRef.value.contains(event.target as Node)) {
     dropdown.value = false;
+  }
+  if (share.value) {
+    share.value = false;
   }
 };
 

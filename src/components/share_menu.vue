@@ -2,16 +2,31 @@
 
   <teleport to="body">
 
+    <Error
+      v-if="if_error"
+      class="z-50 fixed top-14 ml-2"
+      :content="error_content"
+    />
+
+    <Success
+      v-if="if_success"
+      class="z-50 fixed top-14 ml-2"
+      :content="success_content"
+    />
+
     <div
       v-if="visible"
-      class="fixed right-0 left-0 bottom-0 z-50 flex items-end justify-center px-4"
+      class="fixed right-0 left-0 bottom-0 z-50 flex items-center justify-center px-4"
     >
 
-      <div class="bg-white rounded-md p-4 m-3 mb-25 w-full max-w-sm text-sm">
+      <div 
+        class="bg-white rounded-md p-4 m-3 mb-25 w-full max-w-sm text-sm flex items-center justify-center"
+        style="border-radius: 15px; box-shadow: 0 0 10px #333603;"
+      >
 
         <ul class="flex flex-row items-center gap-5">
           
-          <li>
+          <li @click="share('nav')">
             <button class="icon-button">
               <svg width="30" height="30" fill="currentColor" viewBox="0 0 24 24">
                 <path
@@ -21,22 +36,14 @@
             </button>
           </li>
 
-          <li @click.stop="share('watsapp')">
+          <li @click="share('watsapp')">
             <img
               class="icon-button w-10 h-10"
               :src="watsapp_svg"
             />
           </li>
 
-          <li @click.stop="share('nav')">
-            <img
-              class="icon-button w-10 h-10"
-              style="filter: invert(29%) sepia(97%) saturate(489%) hue-rotate(208deg) brightness(95%) contrast(92%);"
-              :src="discord_svg"
-            />
-          </li>
-
-          <li @click.stop="share('copy')">
+          <li @click="share('copy')">
             <img
               class="icon-button w-10 h-10"
               style="filter: invert(55%) sepia(79%) saturate(558%) hue-rotate(342deg) brightness(93%) contrast(89%);"
@@ -56,13 +63,16 @@
 
 <script setup lang="ts">
 
-import { defineProps } from 'vue';
+import { defineProps, ref } from 'vue';
+
+import Error from './status/error.vue';
+import Success from './status/success.vue';
 
 import utils from '../assets/ts/utils';
 
-import discord_svg from '/assets/svgs/social/discord.svg?url';
 import watsapp_svg from '/assets/svgs/social/watsapp.svg?url';
 import copy_svg from '/assets/svgs/copy.svg?url';
+
 
 const props = defineProps<{
   visible: boolean
@@ -70,18 +80,44 @@ const props = defineProps<{
   content: string
 }>();
 
+const if_error = ref<boolean>(false);
+let error_content: string = '';
+
+const if_success = ref<boolean>(false);
+let success_content: string = '';
+
+const triggerStatus = (type: string, content: string) => {
+
+  if (type == "error") {
+    error_content = content;
+    if_error.value = true;
+    setTimeout(() => {
+      if_error.value = false;
+    }, 3000);
+  }
+
+  else if (type == 'success') {
+    success_content = content;
+    if_success.value = true;
+    setTimeout(() => {
+      if_success.value = false;
+    }, 3000);
+  }
+
+};
+
 const share = async (type: string): Promise<void> => {
 
-  if (type == 'watdapp') {
+  console.log('Partage d\'une note par', type);
 
-      const text = encodeURIComponent(
+  if (type === 'watsapp') {
 
-`Je te partage ma note : ${ await utils.htmlToText(props.title) }
+    const text = encodeURIComponent(
+      `Je te partage ma note : ${await utils.htmlToText(props.title)}
 \n
-${ await utils.htmlToText(props.content) }
+${await utils.htmlToText(props.content)}
 \n
 Envoyé via www.silvernote.fr`
-
     );
 
     const fullUrl = `https://wa.me/?text=${text}`;
@@ -89,7 +125,7 @@ Envoyé via www.silvernote.fr`
 
   }
 
-  else if (type == 'nav') {
+  else if (type === 'nav') {
 
     if (navigator.share) {
 
@@ -106,17 +142,34 @@ Envoyé via www.silvernote.fr`
       } catch (err) {
 
         console.error('Erreur de partage', err);
+        triggerStatus('error', 'Une erreur est survenue lors du partage.');
 
       }
 
     } else {
-      alert("Le partage n'est pas supporté sur ce navigateur.");
-    };
-    
+
+      triggerStatus('error', 'Le partage n\'est pas supporté sur ce navigateur.');
+
+    }
+
   }
 
-};
+  else if (type === 'copy') {
 
+    try {
+
+      await navigator.clipboard.writeText(`${props.title}\n\n${props.content}`);
+      console.log('Contenu copié');
+      triggerStatus('success', 'Note copier.');
+
+    } catch (err) {
+
+      console.error('Erreur lors de la copie :', err);
+      triggerStatus('error', 'Une erreur est survenue lors de la copie.');
+
+    }
+  }
+};
 
 </script>
 
