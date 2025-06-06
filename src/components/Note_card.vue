@@ -35,8 +35,13 @@
             <ul>
 
               <li @click.stop="open_note" >Ouvrir</li>
-              <li @click.stop="manage_tags=!manage_tags" >Dossiers</li>
-              <li @click.stop="change_pin_state; dropdown = false"  class="mt-1" >{{ if_pin_active ? 'Désépingler' : 'Epingler' }}</li>
+              <li @click.stop="() => { manage_tags = true; dropdown = false; }" >Dossiers</li>
+              <li 
+                @click.stop="async () => { await change_pin_state(); dropdown = false; }"
+                class="mt-1"
+              >
+                {{ if_pin_active ? 'Désépingler' : 'Epingler' }}
+              </li>
               <li @click.stop="share=!share"  class="mt-1" >Partager</li>
               <li @click.stop="delete_note(1)" class="text-red-600" >Supprimer</li>
 
@@ -72,7 +77,7 @@
     </p>
 
     <div class="absolute left-1 bottom-1 w-[60%] whitespace-nowrap overflow-x-auto text-ellipsis scrollbar-none">
-      <span v-for="(tag, index) in tags" :key="index" class="ml-2 underline">{{ tag.name }}</span>
+      <span v-for="(tag, index) in Tags" :key="index" class="ml-2 underline">{{ tag.name }}</span>
     </div>
     <label class="absolute right-2 bottom-1 z-10">{{ date }}</label>
 
@@ -93,7 +98,10 @@
   />
 
   <Tags_manager
-    v-if="manage_tags"
+    :active="manage_tags"
+    :tags="tags"
+    @update:tags="onTagsUpdate"
+    @update:active="manage_tags = $event"
   />
 
 </template>
@@ -129,10 +137,10 @@ const props = defineProps<{
 const showDialog = ref<boolean>(false);
 const if_pin_active = ref<boolean>(props.pinned)
 const share = ref<boolean>(false);
-const manage_tags = ref<boolean>(true);
+const manage_tags = ref<boolean>(false);
 
 const all_tags = ref<Tag[]>([]);
-let tags: any = null;
+const Tags = ref<Tag[]>([]);
 
 const dropdown = ref<boolean>(false);
 const dropdown_rootRef = ref<HTMLElement | null>(null);
@@ -141,6 +149,10 @@ const dropdown_rootRef = ref<HTMLElement | null>(null);
 const change_pin_state = async () => {
   await db.togle_pinned(props.id);
   if_pin_active.value = !if_pin_active.value;
+};
+
+const onTagsUpdate = (newTags: number[]) => {
+  db.saveTags(newTags, props.id);
 };
 
 
@@ -162,7 +174,7 @@ const open_note = () => {
 
 onMounted(async () => {
   all_tags.value = await db.getAll('tags');
-  tags = all_tags.value.filter(tag => props.tags.includes(tag.id));
+  Tags.value = all_tags.value.filter(tag => props.tags.includes(tag.id));
 });
 
 watch(() => props.pinned, (newVal) => {

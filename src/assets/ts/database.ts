@@ -76,14 +76,26 @@ class Database {
 
     };
 
+    async saveTags(tags: number[], id: number): Promise<void> {
+
+        const db = await this.dbPromise;
+        const note = await db.get('notes', id);
+
+        if (note) {
+            note.tags = tags;
+            await db.put('notes', note);
+        };
+
+    };
+
     async saveContent(content: string, id: number): Promise<void> {
 
         const db = await this.dbPromise;
         const note = await db.get('notes', id);
 
         if (note) {
-        note.content = content;
-        await db.put('notes', note);
+            note.content = content;
+            await db.put('notes', note);
         };
 
     };
@@ -94,8 +106,8 @@ class Database {
         const note = await db.get('notes', id);
 
         if (note) {
-        note.title = title;
-        await db.put('notes', note);
+            note.title = title;
+            await db.put('notes', note);
         };
 
     };
