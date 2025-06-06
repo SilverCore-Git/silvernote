@@ -344,13 +344,13 @@
 
         const actives_tags = all_tags.value?.filter(tag => tag.active);
 
-        //console.log('Tag active ?', all_tags.value?.some(tag => tag.active), '=>', actives_tags?.map(tag => tag.name));
+        console.log('Tag active ?', all_tags.value?.some(tag => tag.active), '=>', actives_tags?.map(tag => tag.name));
 
         if (!all_tags.value?.some(tag => tag.active)) {
             await init_notes(list_notes);
         };
 
-        //console.log("Les notes ont été modifiées, tri en cours...");
+        console.log("Les notes ont été modifiées, tri en cours...");
 
     }, { deep: true });
 

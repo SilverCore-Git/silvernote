@@ -13,13 +13,13 @@
 
         <div
           class="ellipsis"
-          @click.stop="dropdown = !dropdown"
+          @mouseover="dropdown = !dropdown"
         ></div>
 
         <transition name="fade-slide">
 
           <div 
-            class=" absolute top-8.5 right-0 
+            class=" absolute top-8 right-0 
                   bg-[#FFF8F0] border-[#3B3B3B] 
                   border-t-0 border-1
                   p-2 pr-3 pl-3 
@@ -34,9 +34,6 @@
               <li @click.stop="open_note" >Ouvrir</li>
               <li @click.stop="change_pin_state; dropdown = false"  class="mt-1" >{{ if_pin_active ? 'Désépingler' : 'Epingler' }}</li>
               <li @click.stop="share=!share"  class="mt-1" >Partager</li>
-
-              <hr class=" -mr-3 -ml-3 mt-2 text-[#3B3B3B]">
-
               <li @click.stop="delete_note(1)" class="text-red-600" >Supprimer</li>
 
             </ul>
@@ -85,7 +82,11 @@
     @cancel="showDialog = false"
   />
 
-  <share_menu :visible="share" />
+  <share_menu 
+    :visible="share" 
+    :title="title"
+    :content="content"
+  />
 
 </template>
 
@@ -129,46 +130,6 @@ const change_pin_state = async () => {
   if_pin_active.value = !if_pin_active.value;
 };
 
-
-
-const send_note = async (): Promise<void> => {
-
-  const text = encodeURIComponent(
-
-`Je te partage ma note : ${ await utils.htmlToText(props.title) }
-\n
-${ await utils.htmlToText(props.content) }
-\n
-Envoyé via www.silvernote.fr`
-
-  );
-
-  const fullUrl = `https://wa.me/?text=${text}`;
-  window.open(fullUrl, '_blank');
-
-  // if (navigator.share) {
-
-  //   try {
-
-  //     await navigator.share({
-  //       title: props.title,
-  //       text: props.content,
-  //       url: window.location.href,
-  //     });
-
-  //     console.log('Partagé avec succès');
-
-  //   } catch (err) {
-
-  //     console.error('Erreur de partage', err);
-
-  //   }
-
-  // } else {
-  //   alert("Le partage n'est pas supporté sur ce navigateur.");
-  // };
-
-};
 
 const delete_note = async (state: number): Promise<void> => {
   

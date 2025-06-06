@@ -1,12 +1,16 @@
 <template>
+
   <teleport to="body">
+
     <div
       v-if="visible"
       class="fixed right-0 left-0 bottom-0 z-50 flex items-end justify-center px-4"
     >
+
       <div class="bg-white rounded-md p-4 m-3 mb-25 w-full max-w-sm text-sm">
-        <ul class="flex flex-row gap-3">
-          <!-- Share button with inline SVG -->
+
+        <ul class="flex flex-row items-center gap-5">
+          
           <li>
             <button class="icon-button">
               <svg width="30" height="30" fill="currentColor" viewBox="0 0 24 24">
@@ -17,34 +21,108 @@
             </button>
           </li>
 
-          <li>
-            <button class="icon-button"/>
+          <li @click.stop="share('watsapp')">
+            <img
+              class="icon-button w-10 h-10"
+              :src="watsapp_svg"
+            />
           </li>
 
-          <li>
-            <button class="icon-button" :style="{ backgroundImage: `url(${watsapp_svg})` }" />
+          <li @click.stop="share('nav')">
+            <img
+              class="icon-button w-10 h-10"
+              style="filter: invert(29%) sepia(97%) saturate(489%) hue-rotate(208deg) brightness(95%) contrast(92%);"
+              :src="discord_svg"
+            />
           </li>
+
+          <li @click.stop="share('copy')">
+            <img
+              class="icon-button w-10 h-10"
+              style="filter: invert(55%) sepia(79%) saturate(558%) hue-rotate(342deg) brightness(93%) contrast(89%);"
+              :src="copy_svg"
+            />
+          </li>
+
         </ul>
+      
       </div>
+    
     </div>
+  
   </teleport>
+
 </template>
 
 <script setup lang="ts">
-import { defineProps } from 'vue'
 
-import discord_svg from '../assets/svgs/social/discord.svg?url'
-import watsapp_svg from '../assets/svgs/social/watsapp.svg?url'
+import { defineProps } from 'vue';
 
-defineProps<{
+import utils from '../assets/ts/utils';
+
+import discord_svg from '/assets/svgs/social/discord.svg?url';
+import watsapp_svg from '/assets/svgs/social/watsapp.svg?url';
+import copy_svg from '/assets/svgs/copy.svg?url';
+
+const props = defineProps<{
   visible: boolean
-}>()
+  title: string
+  content: string
+}>();
+
+const share = async (type: string): Promise<void> => {
+
+  if (type == 'watdapp') {
+
+      const text = encodeURIComponent(
+
+`Je te partage ma note : ${ await utils.htmlToText(props.title) }
+\n
+${ await utils.htmlToText(props.content) }
+\n
+Envoyé via www.silvernote.fr`
+
+    );
+
+    const fullUrl = `https://wa.me/?text=${text}`;
+    window.open(fullUrl, '_blank');
+
+  }
+
+  else if (type == 'nav') {
+
+    if (navigator.share) {
+
+      try {
+
+        await navigator.share({
+          title: props.title,
+          text: props.content,
+          url: window.location.href,
+        });
+
+        console.log('Partagé avec succès');
+
+      } catch (err) {
+
+        console.error('Erreur de partage', err);
+
+      }
+
+    } else {
+      alert("Le partage n'est pas supporté sur ce navigateur.");
+    };
+    
+  }
+
+};
+
+
 </script>
 
 <style scoped>
+
 .icon-button {
-  width: 30px;
-  height: 30px;
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
@@ -53,4 +131,5 @@ defineProps<{
   background-color: transparent;
   padding: 0;
 }
+
 </style>
