@@ -15,3 +15,16 @@ export interface Tag {
     active: boolean;
     name: string;
 };
+
+export interface SettingOption {
+  id: string;
+  name: string;
+  type: string;
+  active: boolean;
+}
+
+export interface Settings {
+  généraux: SettingOption[];
+  avancé: SettingOption[];
+  dev_mode: SettingOption[];
+}

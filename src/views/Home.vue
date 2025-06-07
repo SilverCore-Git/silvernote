@@ -245,7 +245,10 @@
     //import os from '../assets/ts/os';
     import { init_notes } from '../assets/ts/utils';
     import type { Note } from '../assets/ts/type';
-    import { hitbox } from '../assets/ts/settings';
+    import { hitbox as if_hitbox } from '../assets/ts/settings';
+
+    let hitbox: boolean;
+    onMounted(async () => { hitbox = await if_hitbox() })
 
     import Danger_card from '../components/Danger_card.vue';
     import Note_card from '../components/Note_card.vue';

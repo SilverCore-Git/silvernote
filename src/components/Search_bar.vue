@@ -64,7 +64,10 @@ import { useRouter } from 'vue-router';
 
 import db from '../assets/ts/database';
 import type { Note } from '../assets/ts/type';
-import { hitbox } from '../assets/ts/settings';
+import { hitbox as if_hitbox } from '../assets/ts/settings';
+
+let hitbox: boolean;
+onMounted(async () => { hitbox = await if_hitbox() })
 
 const props = defineProps<{
   pt?: string

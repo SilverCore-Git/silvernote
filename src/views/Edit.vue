@@ -59,7 +59,10 @@ import { useRouter, useRoute } from 'vue-router';
 
 import db from '../assets/ts/database';
 import utils from '../assets/ts/utils';
-import { hitbox } from '../assets/ts/settings';
+import { hitbox as if_hitbox } from '../assets/ts/settings';
+
+let hitbox: boolean;
+onMounted(async () => { hitbox = await if_hitbox() })
 import type { Note } from '../assets/ts/type';
 
 const router = useRouter();

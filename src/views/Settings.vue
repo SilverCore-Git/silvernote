@@ -67,20 +67,27 @@
 
 <script lang="ts" setup>
 
-import { reactive } from 'vue';
+import { onMounted, reactive, watch } from 'vue';
 import { useRouter } from 'vue-router';
 
-import { settings as settingsObj } from '../assets/ts/settings';
-import { hitbox } from '../assets/ts/settings';
+import { SettingsDB, settings as settingsObj  } from '../assets/ts/settings';
+import type { Settings } from '../assets/ts/type';
+import { hitbox as if_hitbox } from '../assets/ts/settings';
 
+let hitbox: boolean;
+onMounted(async () => { hitbox = await if_hitbox() })
 
+const db = new SettingsDB(settingsObj);
 const router = useRouter();
-
-const settings = reactive(settingsObj);
+const settings = reactive<Settings>({
+  généraux: [],
+  avancé: [],
+  dev_mode: []
+});
 
 const isDevModSection = (sectionName: string): boolean => {
     return sectionName == 'dev_mode';
-}
+};
 
 const isDevModeEnabled = (): boolean => {
 
@@ -88,9 +95,19 @@ const isDevModeEnabled = (): boolean => {
     if (!advenced) return false;
 
     const devModeOption = advenced.find(opt => opt.name === 'Mode développeur');
+    if (devModeOption?.active) settings.dev_mode.map(parm => parm.active == false);
     return devModeOption?.active ?? false;
 
-}
+};
+
+onMounted(async () => {
+    Object.assign(settings, await db.get());
+});
+
+watch(settings, async () => {
+    await db.save(JSON.parse(JSON.stringify(settings)));
+    console.log('Parametre modifier : ', Object.values(settings));
+}, { deep: true });
 
 </script>
 

@@ -5,14 +5,17 @@
 </template>
 
 <script setup lang="ts">
+
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { Editor, EditorContent } from '@tiptap/vue-3'
+
 import StarterKit from '@tiptap/starter-kit'
 import Underline from '@tiptap/extension-underline'
 import Placeholder from '@tiptap/extension-placeholder'
 import Link from '@tiptap/extension-link'
 import { Extension } from '@tiptap/core'
 import { evaluate } from 'mathjs'
+
 import db from '../assets/ts/database'
 
 const props = defineProps<{ id: number }>()

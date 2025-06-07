@@ -23,7 +23,7 @@
         <transition name="fade-slide">
  
           <div 
-            class=" absolute top-8 right-0 
+            class=" absolute top-7 right-0 
                     bg-[#FFF8F0] border-[#3B3B3B] 
                     border-t-0 border-1
                     p-2 pr-3 pl-3 
@@ -120,7 +120,10 @@ import Tags_manager from './tags_manager.vue';
 import db from '../assets/ts/database';
 import utils from '../assets/ts/utils';
 import type { Tag } from '../assets/ts/type';
-import { hitbox } from '../assets/ts/settings';
+import { hitbox as if_hitbox } from '../assets/ts/settings';
+
+let hitbox: boolean;
+onMounted(async () => { hitbox = await if_hitbox() })
 
 import pinFull from '/assets/webp/pin_plein.webp?url';
 import pinEmpty from '/assets/webp/pin_vide.webp?url';
