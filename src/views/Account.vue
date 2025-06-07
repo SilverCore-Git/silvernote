@@ -1,7 +1,7 @@
 <template>
 
 <header class="flex flex-row pt-4 relative">
-    <div class="left-arrow absolute left-4" @click="router.push('/')"></div>
+    <div class="left-arrow absolute left-4" :class="hitbox ? 'bg-red-600' : ''" @click="router.push('/')"></div>
 </header>
 
 
@@ -11,6 +11,8 @@
 <script lang="ts" setup>
 
     import { useRouter } from 'vue-router';
+
+    import { hitbox } from '../assets/ts/settings';
 
     const router = useRouter();
 

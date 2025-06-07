@@ -16,8 +16,8 @@
         placeholder="Recherche..."
       >
 
-      <button v-if="searchQuery !== ''" @click="searchQuery = ''" class="cross-btn absolute end-1"></button>
-      <button v-if="searchQuery == ''" @click="search_input?.focus()" class="search-btn absolute end-4"></button>
+      <button v-if="searchQuery !== ''" @click="searchQuery = ''" class="cross-btn absolute end-1" :class="hitbox ? 'bg-red-600' : ''"></button>
+      <button v-if="searchQuery == ''" @click="search_input?.focus()" class="search-btn absolute end-4" :class="hitbox ? 'bg-red-600' : ''"></button>
 
     </div>
 
@@ -64,6 +64,7 @@ import { useRouter } from 'vue-router';
 
 import db from '../assets/ts/database';
 import type { Note } from '../assets/ts/type';
+import { hitbox } from '../assets/ts/settings';
 
 const props = defineProps<{
   pt?: string

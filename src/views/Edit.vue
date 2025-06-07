@@ -2,7 +2,7 @@
 
   <header class="flex flex-row pt-4 relative">
 
-    <div class="left-arrow absolute left-4 cursor-pointer" @click="router.push('/')"></div>
+    <div class="left-arrow absolute left-4 cursor-pointer" @click="router.push('/')" :class="hitbox ? 'bg-red-600' : ''"></div>
 
     <div class="flex flex-row gap-4 absolute right-4">
 
@@ -13,6 +13,7 @@
             ? `url(${edit_note_Full})`
             : `url(${edit_note_Empty})`
         }"
+        :class="hitbox ? 'bg-red-600' : ''"
         @click="change_edit_state"
       ></div>
 
@@ -23,6 +24,7 @@
             ? `url(${pinFull})`
             : `url(${pinEmpty})`
         }"
+        :class="hitbox ? 'bg-red-600' : ''"
         @click="change_pin_state"
       ></div>
 
@@ -39,9 +41,10 @@
       ref="title"
       v-model="note.title"
       @input="save_title"
+      :class="hitbox ? 'bg-indigo-600' : ''"
     />
 
-    <RichMarkdownEditor :simplify_text="if_edit_note_active" :id="note.id" />
+    <RichMarkdownEditor :class="hitbox ? 'bg-blue-600' : ''" :simplify_text="if_edit_note_active" :id="note.id" />
 
     <!-- <MarkdownEditor :id="note.id" v-else /> -->
 
@@ -56,6 +59,7 @@ import { useRouter, useRoute } from 'vue-router';
 
 import db from '../assets/ts/database';
 import utils from '../assets/ts/utils';
+import { hitbox } from '../assets/ts/settings';
 import type { Note } from '../assets/ts/type';
 
 const router = useRouter();
@@ -69,7 +73,6 @@ import pinFull from '/assets/webp/pin_plein.webp?url';
 import pinEmpty from '/assets/webp/pin_vide.webp?url';
 import edit_note_Full from '/assets/webp/note-edit_plein.webp?url';
 import edit_note_Empty from '/assets/webp/note-edit_vide.webp?url';
-import { not } from 'mathjs';
 
 // État pour la gestion de l'édition et du pin
 const if_pin_active = ref(route.query.pinned == "true");

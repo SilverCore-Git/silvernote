@@ -8,21 +8,28 @@
         :style=" { height: `calc(3.5rem + ${top_p})` } "
     >
         
-        <h1 class="absolute left-4">SilverNote</h1>
+        <h1 class="absolute left-4" :class="hitbox ? 'bg-red-600' : ''">SilverNote</h1>
 
         <div 
             class="reload-svg absolute right-24" 
-            :class="{ rotating: isRotating }" 
+            :class="[
+                { rotating: isRotating },
+                hitbox ? 'bg-teal-300' : ''
+            ]"
             @click="reload_list"
         ></div>
 
         <div 
             class="saving-svg absolute right-14" 
-            :class="{ 'jump': isJumping }" 
+            :class="[
+                { 'jump': isJumping },
+                hitbox ? 'bg-teal-300' : '' 
+            ]"
             @click="saving_notes"
         ></div>
 
         <div 
+            :class="[ hitbox ? 'bg-teal-300' : '' ]"
             class="ellipsis-svg absolute right-4" 
             @click="if_open_dropdown=!if_open_dropdown"
             @mouseover="console.log('caca')"
@@ -52,6 +59,7 @@
     <ul 
         v-if="all_tags && all_tags.length" 
         class="flex flex-row mr-4 ml-4 gap-1.5 whitespace-nowrap overflow-x-auto text-ellipsis scrollbar-none"
+        :class="hitbox ? 'bg-amber-400' : ''"
     >
 
         <li 
@@ -114,7 +122,7 @@
         <Tags_item_loader />
     </ul>
 
-    <div @click="if_open_dropdown=false" class=" overflow-x-hidden mb-30">
+    <div @click="if_open_dropdown=false" class=" overflow-x-hidden mb-30" :class="hitbox ? 'bg-rose-600' : ''">
 
         <Danger_card 
             v-if="tip" 
@@ -134,7 +142,7 @@
             :content="Danger_card_props?.message" 
         />
 
-        <div class="overflow-y-auto mt-4 min-h-[60vh]">
+        <div class="overflow-y-auto mt-4 min-h-[60vh]" :class="hitbox ? 'bg-purple-600' : ''">
 
             <ul>
 
@@ -235,9 +243,9 @@
     import db from '../assets/ts/database';
     import back from '../assets/ts/backend_link';
     //import os from '../assets/ts/os';
-    import utils from '../assets/ts/utils';
     import { init_notes } from '../assets/ts/utils';
     import type { Note } from '../assets/ts/type';
+    import { hitbox } from '../assets/ts/settings';
 
     import Danger_card from '../components/Danger_card.vue';
     import Note_card from '../components/Note_card.vue';

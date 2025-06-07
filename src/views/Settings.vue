@@ -3,9 +3,9 @@
 
     <header class="flex flex-row pt-4 relative">
 
-        <div class="left-arrow absolute left-4" @click="router.push('/')"></div>
+        <div class="left-arrow absolute left-4" :class="hitbox ? 'bg-red-600' : ''" @click="router.push('/')"></div>
 
-        <div class="legal absolute right-4" @click="router.push('/legale')"></div>
+        <div class="legal absolute right-4" :class="hitbox ? 'bg-red-600' : ''" @click="router.push('/legale')"></div>
 
     </header>
 
@@ -31,6 +31,7 @@
                 v-if="!isDevModSection(Object.keys(settings)[sectionIndex]) || isDevModeEnabled()"
                 :for="`switch-${sectionIndex}-${optionIndex}`"
                 :key="optionIndex"
+                :class="hitbox ? 'bg-red-600' : ''"
             >
 
                 <span>{{ option.name }}</span>
@@ -68,7 +69,10 @@
 
 import { reactive } from 'vue';
 import { useRouter } from 'vue-router';
+
 import { settings as settingsObj } from '../assets/ts/settings';
+import { hitbox } from '../assets/ts/settings';
+
 
 const router = useRouter();
 

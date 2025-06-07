@@ -5,7 +5,7 @@
     style="border-radius: 15px;"
     @click="open_note"
   > 
-    <p class="font-bold text-xl w-[80%] whitespace-nowrap overflow-hidden text-ellipsis">{{ utils.htmlToText(title) }}</p>
+    <p class="font-bold text-xl w-[80%] whitespace-nowrap overflow-hidden text-ellipsis" :class="hitbox ? 'bg-teal-500' : ''">{{ utils.htmlToText(title) }}</p>
 
     <div class="absolute right-0 top-3 h-full flex flex-row-reverse gap-1.5">
 
@@ -17,6 +17,7 @@
 
         <div
           class="ellipsis"
+          :class="hitbox ? 'bg-red-600' : ''"
         ></div>
 
         <transition name="fade-slide">
@@ -34,16 +35,15 @@
 
             <ul>
 
-              <li @click.stop="open_note" >Ouvrir</li>
-              <li @click.stop="() => { manage_tags = true; dropdown = false; }" >Dossiers</li>
+              <li @click.stop="open_note" :class="hitbox ? 'bg-teal-600 border-1 border-black' : ''" >Ouvrir</li>
+              <li @click.stop="() => { manage_tags = true; dropdown = false; }" :class="hitbox ? 'bg-teal-600 border-1 border-black' : ''" >Dossiers</li>
               <li 
                 @click.stop="async () => { await change_pin_state(); dropdown = false; }"
-                class="mt-1"
-              >
+                :class="hitbox ? 'bg-teal-600 border-1 border-black' : ''" >
                 {{ if_pin_active ? 'Désépingler' : 'Epingler' }}
               </li>
-              <li @click.stop="share=!share"  class="mt-1" >Partager</li>
-              <li @click.stop="delete_note(1)" class="text-red-600" >Supprimer</li>
+              <li @click.stop="share=!share"   :class="hitbox ? 'bg-teal-600 border-1 border-black' : ''" >Partager</li>
+              <li @click.stop="delete_note(1)" class="text-red-600" :class="hitbox ? 'bg-teal-600 border-1 border-black' : ''" >Supprimer</li>
 
             </ul>
 
@@ -66,20 +66,22 @@
             : `url(${pinEmpty})`,
         }"
         @click.stop="change_pin_state"
+        :class="hitbox ? 'bg-red-600' : ''"
       ></div>
 
     </div>
 
     <p 
       class="text-mb mb-3 w-[65%] whitespace-nowrap overflow-hidden text-ellipsis"
+      :class="hitbox ? 'bg-blue-500' : ''"
     >
       {{ utils.htmlToText(content) }}
     </p>
 
     <div class="absolute left-1 bottom-1 w-[60%] whitespace-nowrap overflow-x-auto text-ellipsis scrollbar-none">
-      <span v-for="(tag, index) in Tags" :key="index" class="ml-2 underline">{{ tag.name }}</span>
+      <span v-for="(tag, index) in Tags" :key="index" class="ml-2 underline" :class="hitbox ? 'bg-teal-500' : ''">{{ tag.name }}</span>
     </div>
-    <label class="absolute right-2 bottom-1 z-10">{{ date }}</label>
+    <label class="absolute right-2 bottom-1 z-10" :class="hitbox ? 'bg-teal-500' : ''">{{ date }}</label>
 
   </div>
 
@@ -118,6 +120,7 @@ import Tags_manager from './tags_manager.vue';
 import db from '../assets/ts/database';
 import utils from '../assets/ts/utils';
 import type { Tag } from '../assets/ts/type';
+import { hitbox } from '../assets/ts/settings';
 
 import pinFull from '/assets/webp/pin_plein.webp?url';
 import pinEmpty from '/assets/webp/pin_vide.webp?url';
