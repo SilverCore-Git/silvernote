@@ -134,7 +134,7 @@
             :content="Danger_card_props?.message" 
         />
 
-        <div class="overflow-y-auto mt-4">
+        <div class="overflow-y-auto mt-4 min-h-[60vh]">
 
             <ul>
 

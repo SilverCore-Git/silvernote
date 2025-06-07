@@ -9,6 +9,11 @@ body {
     background-color: #FFF8F0;
     color: #3B3B3B;
     overflow-x: hidden;
+    font-family: 'Roboto';
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Montserrat';
 }
 
 .scrollbar-none::-webkit-scrollbar {
