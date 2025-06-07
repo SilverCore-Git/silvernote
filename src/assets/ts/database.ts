@@ -165,6 +165,6 @@ class Database {
 
 
 export default  new Database(
-                        notes,
-                        tags
+                        // notes,
+                        // tags
                     );

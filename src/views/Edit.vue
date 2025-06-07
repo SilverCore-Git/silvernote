@@ -51,10 +51,11 @@
 
 <script lang="ts" setup>
 
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, onUnmounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 
 import db from '../assets/ts/database';
+import utils from '../assets/ts/utils';
 import type { Note } from '../assets/ts/type';
 
 const router = useRouter();
@@ -68,6 +69,7 @@ import pinFull from '/assets/webp/pin_plein.webp?url';
 import pinEmpty from '/assets/webp/pin_vide.webp?url';
 import edit_note_Full from '/assets/webp/note-edit_plein.webp?url';
 import edit_note_Empty from '/assets/webp/note-edit_vide.webp?url';
+import { not } from 'mathjs';
 
 // État pour la gestion de l'édition et du pin
 const if_pin_active = ref(route.query.pinned == "true");
@@ -94,11 +96,45 @@ const save_title = () => {
 
 // Fonction pour récupérer la note
 onMounted(async () => {
-  title.value?.focus();
+
+  setTimeout(() => {
+    title.value?.focus();
+  }, 200);
+
+  if (route.query.id == 'new') {
+    console.log('Création d\'une nouvelle note')
+    const Note = await db.create({ 
+                                  id: -1,
+                                  pinned: false,
+                                  simply_edit: false,
+                                  title: note.value.title,
+                                  content: note.value.content,
+                                  date: utils.date(),
+                                  tags: []
+                              });
+
+    note.value.id = Note.id;
+    router.push({ 
+      query: { 
+        ...route.query,
+        id: Note.id
+      }
+    });
+};
+
   const fetchedNote = await db.getNote(Number(route.query.id));
+
   if (fetchedNote) {
     note.value = fetchedNote;
   }
+
+});
+
+onUnmounted(async () => {
+  if (note.value.title == '') {
+    console.log('Sauvegarde de la note vide')
+    db.saveTitle('Note sans titre', note.value.id);
+  };
 });
 
 // Fonction pour changer l'état du pin

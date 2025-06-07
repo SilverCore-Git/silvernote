@@ -32,7 +32,7 @@
         <transition name="fade-slide">
             <div 
                 v-if="if_open_dropdown"
-                class="dropdown absolute right-3 bg-[#F28C28] 
+                class="dropdown absolute right-0 bg-[#F28C28] 
                     z-50 min-w-[150px] w-[40%] flex flex-col justify-center items-center p-3"
                 :style=" { top: `calc(3.5rem + ${top_p})` } "
             >
@@ -57,20 +57,20 @@
         <li 
             v-for="(tag, index) in all_tags"
             :key="index" 
-            class=" w-[20%] min-w-[70px]"
         >
 
             <Tags_item 
                 @click="add_tag_filter(tag.id)" 
                 :id="tag.id" :name="tag.name" 
                 :tag="tag.name" 
-                :active="tag.active" 
+                :active="tag.active"
+                class="min-w-[70px]"
             />
 
         </li>
         
         <li 
-            class=" w-[20%] min-w-[70px]"
+            class=" min-w-[70px]"
         >
 
             <Tags_item 
@@ -94,7 +94,7 @@
         >
 
             <Tags_item 
-                @click="if_open_create_tag = true"
+                @click="if_open_create_tag = true; inputRef?.focus()"
                 :id="null"
                 name="+"
                 :tag="''"
@@ -151,14 +151,28 @@
                 </li>
 
                 <li v-else-if="list_notes" class="flex flex-col">
+
                     <div 
                         class="note-card bg-[#FFF8F0] mr-4 ml-4 text-[#3B3B3B] p-3 border-[#3B3B3B] border-2"
                         style="border-radius: 15px;"
                     >
+
                         <p class="font-bold text-xl w-[80%] whitespace-nowrap overflow-hidden text-ellipsis">
                             Aucune note trouvée !
                         </p>
+
+                        <div class="bg-transparent w-full z-50 relative mt-5">
+                            <button 
+                                style="box-shadow: 0 0 15px #3636364f;" 
+                                @click="create_new_note" 
+                                class="add-note-btn cursor-pointer flex items-center justify-center w-full"
+                            >
+                                <div class="add-note-svg"></div>
+                            </button>
+                        </div>
+
                     </div>
+
                 </li>
 
                 <li v-else class="flex flex-col">
@@ -172,7 +186,7 @@
 
         </div>
     
-        <div class="bg-transparent w-full z-50 fixed bottom-0">
+        <div v-if="list_notes && list_notes?.length" class="bg-transparent w-full z-50 fixed bottom-0">
             <button 
                 style="box-shadow: 0 0 15px #3636364f;" 
                 @click="create_new_note" 
@@ -189,13 +203,14 @@
             <section class="flex flex-col gap-4 fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-110">
 
             <div class="p-1 text-center w-full border-2 bg-white/80 border-[#F28C28] rounded-[15px] shadow-lg">
-            <input
-                v-model="tag_name"
-                ref="inputRef"
-                type="text"
-                class="outline-none pl-1 w-full"
-                placeholder="Mon dossier"
-            />
+                <input
+                    v-model="tag_name"
+                    ref="inputRef"
+                    type="text"
+                    class="outline-none pl-1 w-full"
+                    placeholder="Mon dossier"
+                    @click.stop="inputRef?.focus()"
+                />
             </div>
 
             <button
@@ -203,7 +218,7 @@
                         hover:bg-[#f28c28]"
                 @click.stop="create_tag(tag_name)"
             >
-                <span>Créer mon tag</span>
+                <span>Créer mon dossier</span>
             </button>
 
         </section>
@@ -235,17 +250,7 @@
 
     const create_new_note = async (): Promise<void> => {
 
-        const note = await db.create({ 
-                                        id: -1,
-                                        pinned: false,
-                                        simply_edit: false,
-                                        title: 'Note sans titre',
-                                        content: '',
-                                        date: utils.date(),
-                                        tags: []
-                                    });
-
-        router.push(`/edit?id=${note.id}&pinned=false&simply_edit=false`);
+        router.push(`/edit?id=new&pinned=false&simply_edit=false`);
 
     };
 
@@ -262,6 +267,7 @@
     const isRotating = ref(false);
     const if_open_dropdown = ref<boolean>(false);
     const if_open_create_tag = ref<boolean>(false);
+    const inputRef = ref<HTMLInputElement | null>(null);
 
 
 
@@ -316,7 +322,7 @@
             console.log('Rechargement des notes...')
             setTimeout(() => {
                 isRotating.value = false;
-            }, 400);
+            }, 300);
         }, 400);
 
     };
