@@ -10,9 +10,13 @@
 
 <script lang="ts" setup>
 
+    import { onMounted } from 'vue'
     import { useRouter } from 'vue-router';
 
-    import { hitbox } from '../assets/ts/settings';
+    import { hitbox as if_hitbox } from '../assets/ts/settings';
+
+    let hitbox: boolean;
+    onMounted(async () => { hitbox = await if_hitbox() })
 
     const router = useRouter();
 

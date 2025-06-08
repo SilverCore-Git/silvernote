@@ -2,10 +2,10 @@ import { openDB } from 'idb';
 import type { DBSchema, IDBPDatabase } from 'idb';
 import type { Note, Tag } from './type';
 
-import back from './backend_link';
+//import back from './backend_link';
 
-const notes: Note[] = back.db?.notes;
-const tags: Tag[] = back.db?.tags;
+// const notes: Note[] = back.db?.notes;
+// const tags: Tag[] = back.db?.tags;
 
 interface NotesDB extends DBSchema {
     notes: {

@@ -38,12 +38,12 @@ const db = {
 
 
 const info_message = (): { message: string, title: string, btn: boolean, href: string } | void => {
-    return { 
-              message: "SilverNote est actuellement en version bêta. Certaines fonctionnalités peuvent présenter des bugs.", 
-              title: "SilverNote bêta",
-              btn: false,
-              href: "https://www.silvercore.fr"
-            };
+    // return { 
+    //           message: "SilverNote est actuellement en version bêta. Certaines fonctionnalités peuvent présenter des bugs.", 
+    //           title: "SilverNote bêta",
+    //           btn: false,
+    //           href: "https://www.silvercore.fr"
+    //         };
 };
 
 const saving_all = async (Notes: Note[], Tags: Tag[]): Promise<void> => {

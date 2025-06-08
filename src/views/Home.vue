@@ -7,50 +7,52 @@
         :class="`pt-[${top_p}]`"
         :style=" { height: `calc(3.5rem + ${top_p})` } "
     >
-        
-        <h1 class="absolute left-4" :class="hitbox ? 'bg-red-600' : ''">SilverNote</h1>
 
-        <div 
-            class="reload-svg absolute right-24" 
-            :class="[
-                { rotating: isRotating },
-                hitbox ? 'bg-teal-300' : ''
-            ]"
-            @click="reload_list"
-        ></div>
+        <div class="flex flex-row justify-center items-center">
+            
+            <h1 class="absolute left-4" :class="hitbox ? 'bg-red-600' : ''">SilverNote</h1>
 
-        <div 
-            class="saving-svg absolute right-14" 
-            :class="[
-                { 'jump': isJumping },
-                hitbox ? 'bg-teal-300' : '' 
-            ]"
-            @click="saving_notes"
-        ></div>
-
-        <div 
-            :class="[ hitbox ? 'bg-teal-300' : '' ]"
-            class="ellipsis-svg absolute right-4" 
-            @click="if_open_dropdown=!if_open_dropdown"
-            @mouseover="console.log('caca')"
-            @mouseenter="console.log('caca2')"
-        ></div>
-
-        <transition name="fade-slide">
             <div 
-                v-if="if_open_dropdown"
-                class="dropdown absolute right-0 bg-[#F28C28] 
-                    z-50 min-w-[150px] w-[40%] flex flex-col justify-center items-center p-3"
-                :style=" { top: `calc(3.5rem + ${top_p})` } "
-            >
-                <ul class="text-xl">
-                    <li @click="router.push('/settings')">Paramètre</li>
-                    <li @click="router.push('/account')">Compte</li>
-                    <li>Aide</li>
-                    <li>Légal</li>
-                </ul>
-            </div>
-        </transition>
+                class="reload-svg absolute right-24" 
+                :class="[
+                    { rotating: isRotating },
+                    hitbox ? 'bg-teal-300' : ''
+                ]"
+                @click="reload_list"
+            ></div>
+
+            <div 
+                class="saving-svg absolute right-14" 
+                :class="[
+                    { 'jump': isJumping },
+                    hitbox ? 'bg-teal-300' : '' 
+                ]"
+                @click="saving_notes"
+            ></div>
+
+            <div
+                :class="[ hitbox ? 'bg-teal-300' : '' ]"
+                class="ellipsis-svg absolute right-4" 
+                @click="if_open_dropdown = !if_open_dropdown"
+            ></div>
+
+            <transition name="fade-slide">
+                <div
+                    v-if="if_open_dropdown"
+                    class="dropdown absolute right-0 bg-[#F28C28] 
+                        z-50 min-w-[150px] w-[40%] flex flex-col justify-center items-center p-3"
+                    :style=" { top: `calc(3.5rem + ${top_p})` } "
+                >
+                    <ul class="text-xl">
+                        <li @click="router.push('/settings')">Paramètre</li>
+                        <li @click="router.push('/account')">Compte</li>
+                        <li>Aide</li>
+                        <li>Légal</li>
+                    </ul>
+                </div>
+            </transition>
+
+        </div>
 
     </header>
 
@@ -146,7 +148,7 @@
 
             <ul>
 
-                <li v-if="list_notes && list_notes?.length" class="flex flex-col" v-for="(note, index) in list_notes" :key="index">
+                <li v-if="list_notes && list_notes.length" class="flex flex-col" v-for="(note, index) in list_notes" :key="index">
                     <Note_card 
                         :id="note.id"
                         :pinned="note.pinned"
@@ -158,7 +160,7 @@
                     />
                 </li>
 
-                <li v-else-if="list_notes" class="flex flex-col">
+                <li v-else-if="list_notes && list_notes.length == 0" class="flex flex-col">
 
                     <div 
                         class="note-card bg-[#FFF8F0] mr-4 ml-4 text-[#3B3B3B] p-3 border-[#3B3B3B] border-2"
@@ -362,7 +364,7 @@
 
     watch(list_notes, async () => {
 
-        const actives_tags = all_tags.value?.filter(tag => tag.active);
+        //const actives_tags = all_tags.value?.filter(tag => tag.active);
 
         //console.log('Tag active ?', all_tags.value?.some(tag => tag.active), '=>', actives_tags?.map(tag => tag.name));
 
@@ -405,7 +407,7 @@
         background-size: contain;
         background-repeat: no-repeat;
         background-position: center;
-        background-image: url('../assets/svgs/ellipsis.svg');
+        background-image: url('/assets/svgs/ellipsis.svg');
         filter: invert(1);
         transition: all 0.3s ease;
     }
