@@ -4,11 +4,11 @@
     <editor-content :editor="editor ?? undefined" class="prose h-full" />
   </div>
 
-  <div class="fixed bottom-0 left-0 right-0">
+  <div class="fixed bottom-0 w-full z-50">
 
-    <div class="flex flex-row gap-1 justify-between items-center bg-[#FFF8F0] border-t-1 border-[#3B3B3B] ">
+    <div class="absolute bottom-0 left-2 right-2 flex flex-row gap-1 justify-between items-center bg-[#FFF8F0] border-t-1 border-[#3B3B3B] ">
 
-      <ul class="ml-2">
+      <ul>
         <button @click="toggleHeading(1)">H1</button>
         <button @click="toggleHeading(2)">H2</button>
         <button @click="toggleHeading(3)">H3</button>
@@ -19,7 +19,7 @@
         <button @click="handleCopyPaste" class="copy-svg"></button>
       </ul>
 
-      <ul class="mr-2">
+      <ul>
         <button @click="toggleBold" :class="{ active: isBoldActive }"><strong>B</strong></button>
         <button @click="toggleItalic" :class="{ active: isItalicActive }"><i>i</i></button>
         <button @click="toggleStrike" :class="{ active: isStrikeActive }"><s>S</s></button>
