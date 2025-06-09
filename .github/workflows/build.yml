@@ -96,6 +96,9 @@ jobs:
         run: ./gradlew assembleDebug
         working-directory: android
 
+      - name: Rename APK
+        run: mv android/app/build/outputs/apk/debug/app-debug.apk android/app/build/outputs/apk/debug/silvernote_android_install.apk
+
       - name: Upload APK artifact for next job
         id: upload-android-artifact
         uses: actions/upload-artifact@v4
@@ -117,7 +120,8 @@ jobs:
       - name: Get version from package.json
         id: get_version
         run: |
-          echo "VERSION=$(node -p 'require(\"./package.json\").version')" >> $GITHUB_OUTPUT
+          VERSION=$(node -p "require('./package.json').version")
+          echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
 
       - name: Download iOS artifact
         uses: actions/download-artifact@v4
