@@ -35,13 +35,7 @@
 
             <ul>
 
-              <li @click.stop="open_note" :class="hitbox ? 'bg-teal-600 border-1 border-black' : ''" >Ouvrir</li>
               <li @click.stop="() => { manage_tags = true; dropdown = false; }" :class="hitbox ? 'bg-teal-600 border-1 border-black' : ''" >Dossiers</li>
-              <li 
-                @click.stop="async () => { await change_pin_state(); dropdown = false; }"
-                :class="hitbox ? 'bg-teal-600 border-1 border-black' : ''" >
-                {{ if_pin_active ? 'Désépingler' : 'Epingler' }}
-              </li>
               <li @click.stop="share=!share"   :class="hitbox ? 'bg-teal-600 border-1 border-black' : ''" >Partager</li>
               <li @click.stop="delete_note(1)" class="text-red-600" :class="hitbox ? 'bg-teal-600 border-1 border-black' : ''" >Supprimer</li>
 
