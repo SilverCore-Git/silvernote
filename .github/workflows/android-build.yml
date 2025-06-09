@@ -7,7 +7,7 @@ on:
 
 jobs:
   build-android:
-    name: Build Android APK
+    name: Build and Release Android APK
     runs-on: ubuntu-latest
 
     steps:
@@ -35,7 +35,8 @@ jobs:
           java-version: '21'
 
       - name: Grant execute permission to gradlew
-        run: chmod +x android/gradlew
+        run: chmod +x gradlew
+        working-directory: android
 
       - name: Build APK
         run: ./gradlew assembleDebug
@@ -45,4 +46,23 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: app-debug.apk
-          path: ./app/build/outputs/apk/debug/app-debug.apk
+          path: android/app/build/outputs/apk/debug/app-debug.apk
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: apk-${{ github.run_number }}
+          name: APK Build ${{ github.run_number }}
+          body: |
+            Nouvelle build Android générée automatiquement depuis la branche `front_mobile`.
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload APK to Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: apk-${{ github.run_number }}
+          name: APK Build ${{ github.run_number }}
+          files: android/app/build/outputs/apk/debug/app-debug.apk
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
