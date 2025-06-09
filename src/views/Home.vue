@@ -6,7 +6,7 @@
             font-family: 'Montserrat', sans-serif; 
             box-shadow: 0 0 15px #36363681;
             height: calc(3.5rem + env(safe-area-inset-top));
-            padding-top: env(safe-area-inset-top);
+            padding-top: calc(env(safe-area-inset-top)/2);
         " 
         class="
                 mb-5 top-0 left-0 w-full 

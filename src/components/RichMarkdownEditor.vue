@@ -4,15 +4,14 @@
     <editor-content :editor="editor ?? undefined" class="prose h-full" />
   </div>
 
-  <div class="fixed bottom-0 w-full z-50">
+  <div class="fixed w-full z-50" style="bottom: env(safe-area-inset-bottom);">
 
     <div 
       class="
-              absolute left-2 right-2 
+              absolute left-2 right-2 bottom-0
               flex flex-row gap-1 justify-between items-center 
               bg-[#FFF8F0] border-t-1 border-[#3B3B3B] 
             "
-      style="bottom: env(safe-area-inset-bottom);"
     >
 
       <ul>

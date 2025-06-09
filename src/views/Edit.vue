@@ -1,6 +1,6 @@
 <template>
 
-  <header class="flex flex-row relative" style="padding-top: calc(1rem + env(safe-area-inset-top));">
+  <header class="flex flex-row relative" style="padding-top: calc(1rem + env(safe-area-inset-top)/2);">
 
     <div class="left-arrow absolute left-4 cursor-pointer" @click="router.push('/')" :class="hitbox ? 'bg-red-600' : ''"></div>
 
