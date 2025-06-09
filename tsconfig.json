@@ -1,7 +1,17 @@
 {
-  "files": [],
-  "references": [
-    { "path": "./tsconfig.app.json" },
-    { "path": "./tsconfig.node.json" }
-  ]
+  "compilerOptions": {
+    "target": "ES2020",                      
+    "module": "CommonJS",
+    "rootDir": "./src",   
+    "outDir": "./dist", 
+    "strict": true, 
+    "esModuleInterop": true,    
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,   
+    "moduleResolution": "node", 
+    "resolveJsonModule": true,
+    "sourceMap": true    
+  },
+  "include": ["src"], 
+  "exclude": ["node_modules", "dist"]
 }
