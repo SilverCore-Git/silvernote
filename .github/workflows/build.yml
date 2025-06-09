@@ -139,7 +139,7 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           tag_name: v${{ steps.get_version.outputs.VERSION }}
-          name: Silvernote Mobile (${{ steps.get_version.outputs.VERSION }})
+          name: Silvernote (${{ steps.get_version.outputs.VERSION }})
           body: |
             Build mobile générée automatiquement.
           files: |
