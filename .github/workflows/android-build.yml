@@ -3,7 +3,7 @@ name: Build Android App
 on:
   push:
     branches:
-      - front_mobile_android
+      - front_mobile
 
 jobs:
   build-android:
