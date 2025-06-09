@@ -10,8 +10,10 @@ permissions:
 
 jobs:
   build-ios:
-    name: iOS App Build
+    name: Build iOS app
     runs-on: macos-latest
+    outputs:
+      ios-app-path: ${{ steps.upload-ios-artifact.outputs.app-path }}
 
     steps:
       - name: Checkout repo
@@ -49,34 +51,18 @@ jobs:
           mkdir -p ios/build/outputs
           cp -R ios/build/Build/Products/Debug-iphonesimulator/App.app ios/build/outputs/
 
-      - name: Upload .app artifact
+      - name: Upload .app artifact for next job
+        id: upload-ios-artifact
         uses: actions/upload-artifact@v4
         with:
           name: Silvernote_iOS_Debug.app
           path: ios/build/outputs/App.app
 
-      - name: Create GitHub Release (iOS)
-        uses: softprops/action-gh-release@v1
-        with:
-          tag_name: ios-${{ github.run_number }}
-          name: iOS Build ${{ github.run_number }}
-          body: |
-            Nouvelle build iOS générée automatiquement depuis la branche `front_mobile`.
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Upload .app to Release
-        uses: softprops/action-gh-release@v1
-        with:
-          tag_name: ios-${{ github.run_number }}
-          name: Silvernote iOS Debug ${{ github.run_number }}
-          files: ios/build/outputs/App.app
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
   build-android:
-    name: Android APK
+    name: Build Android app
     runs-on: ubuntu-latest
+    outputs:
+      android-apk-path: ${{ steps.upload-android-artifact.outputs.apk-path }}
 
     steps:
       - name: Checkout repo
@@ -110,27 +96,58 @@ jobs:
         run: ./gradlew assembleDebug
         working-directory: android
 
-      - name: Upload APK artifact
+      - name: Upload APK artifact for next job
+        id: upload-android-artifact
         uses: actions/upload-artifact@v4
         with:
           name: silvernote_install.apk
           path: android/app/build/outputs/apk/debug/app-debug.apk
 
-      - name: Create GitHub Release (Android)
+  release:
+    name: Create GitHub Release with iOS & Android artifacts
+    needs:
+      - build-ios
+      - build-android
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download iOS artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: Silvernote_iOS_Debug.app
+          path: ios_app
+
+      - name: Download Android artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: silvernote_install.apk
+          path: android_app
+
+      - name: Create GitHub Release
+        id: create_release
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: apk-${{ github.run_number }}
-          name: APK Build ${{ github.run_number }}
+          tag_name: build-${{ github.run_number }}
+          name: Build ${{ github.run_number }}
           body: |
-            Nouvelle build Android générée automatiquement depuis la branche `front_mobile`.
+            Nouvelle build iOS et Android générée automatiquement depuis la branche `front_mobile`.
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Upload APK to Release
+      - name: Upload iOS artifact to release
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: apk-${{ github.run_number }}
+          tag_name: build-${{ github.run_number }}
+          name: Silvernote iOS Debug ${{ github.run_number }}
+          files: ios_app/App.app
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload Android artifact to release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: build-${{ github.run_number }}
           name: Silvernote APK ${{ github.run_number }}
-          files: android/app/build/outputs/apk/debug/app-debug.apk
+          files: android_app/app-debug.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
