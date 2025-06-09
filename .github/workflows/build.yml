@@ -101,7 +101,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: silvernote_install.apk
-          path: android/app/build/outputs/apk/debug/app-debug.apk
+          path: android/app/build/outputs/apk/debug/silvernote_android_install.apk
 
   release:
     name: Create GitHub Release with iOS & Android artifacts
@@ -135,8 +135,8 @@ jobs:
       - name: Upload iOS artifact to release
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: build-${{ github.run_number }}
-          name: Silvernote iOS Debug ${{ github.run_number }}
+          tag_name: v${{ steps.get_version.outputs.VERSION }}
+          name: Silvernote ${{ github.run_number }}
           files: ios_app/App.app
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -144,8 +144,8 @@ jobs:
       - name: Upload Android artifact to release
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: build-${{ github.run_number }}
-          name: Silvernote APK ${{ github.run_number }}
-          files: android_app/app-debug.apk
+          tag_name: v${{ steps.get_version.outputs.VERSION }}
+          name: Silvernote ${{ github.run_number }}
+          files: android_app/silvernote_android_install.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
