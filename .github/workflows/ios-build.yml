@@ -1,0 +1,75 @@
+name: Build iOS App
+
+on:
+  push:
+    branches:
+      - front_mobile
+
+permissions:
+  contents: write
+
+jobs:
+  build-ios:
+    name: iOS App Build
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build frontend
+        run: npm run build
+
+      - name: Sync Capacitor iOS
+        run: npx cap sync ios
+
+      - name: Install CocoaPods dependencies
+        run: |
+          cd ios/App
+          pod install
+
+      - name: Build iOS app (Debug)
+        run: |
+          xcodebuild -workspace ios/App/App.xcworkspace \
+                     -scheme App \
+                     -configuration Debug \
+                     -sdk iphonesimulator \
+                     -derivedDataPath ios/build
+
+      - name: Archive .app for artifact
+        run: |
+          mkdir -p ios/build/outputs
+          cp -R ios/build/Build/Products/Debug-iphonesimulator/App.app ios/build/outputs/
+
+      - name: Upload .app artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Silvernote_iOS_Debug.app
+          path: ios/build/outputs/App.app
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ios-${{ github.run_number }}
+          name: iOS Build ${{ github.run_number }}
+          body: |
+            Nouvelle build iOS générée automatiquement depuis la branche `front_mobile`.
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload .app to Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ios-${{ github.run_number }}
+          name: Silvernote iOS Debug ${{ github.run_number }}
+          files: ios/build/outputs/App.app
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
