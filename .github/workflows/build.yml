@@ -127,10 +127,8 @@ jobs:
         id: create_release
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: build-${{ github.run_number }}
-          name: Build ${{ github.run_number }}
-          body: |
-            Nouvelle build iOS et Android générée automatiquement depuis la branche `front_mobile`.
+          tag_name: v${{ steps.get_version.outputs.VERSION }}
+          name: Silvernote ${{ github.run_number }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
