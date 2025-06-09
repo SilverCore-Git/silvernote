@@ -112,13 +112,13 @@ jobs:
 
     steps:
       - name: Download iOS artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: Silvernote_iOS_Debug.app
           path: ios_app
 
       - name: Download Android artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: silvernote_install.apk
           path: android_app
