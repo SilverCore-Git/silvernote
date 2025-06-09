@@ -111,6 +111,14 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Get version from package.json
+        id: get_version
+        run: |
+          echo "VERSION=$(node -p \"require('./package.json').version\")" >> $GITHUB_OUTPUT
+
       - name: Download iOS artifact
         uses: actions/download-artifact@v4
         with:
@@ -124,28 +132,14 @@ jobs:
           path: android_app
 
       - name: Create GitHub Release
-        id: create_release
         uses: softprops/action-gh-release@v1
         with:
           tag_name: v${{ steps.get_version.outputs.VERSION }}
-          name: Silvernote ${{ github.run_number }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Upload iOS artifact to release
-        uses: softprops/action-gh-release@v1
-        with:
-          tag_name: v${{ steps.get_version.outputs.VERSION }}
-          name: Silvernote ${{ github.run_number }}
-          files: ios_app/App.app
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Upload Android artifact to release
-        uses: softprops/action-gh-release@v1
-        with:
-          tag_name: v${{ steps.get_version.outputs.VERSION }}
-          name: Silvernote ${{ github.run_number }}
-          files: android_app/silvernote_android_install.apk
+          name: Silvernote Mobile (${{ steps.get_version.outputs.VERSION }})
+          body: |
+            Build mobile générée automatiquement.
+          files: |
+            ios_app/App.app
+            android_app/silvernote_android_install.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
