@@ -6,8 +6,14 @@
             font-family: 'Montserrat', sans-serif; 
             box-shadow: 0 0 15px #36363681;
             height: calc(3.5rem + env(safe-area-inset-top));
+            padding-top: env(safe-area-inset-top);
         " 
-        class="mb-5 top-0 left-0 w-full text-2xl bg-[#F28C28] text-white font-bold flex items-center justify-center fixed z-50"
+        class="
+                mb-5 top-0 left-0 w-full 
+                text-2xl font-bold
+                bg-[#F28C28] text-white
+                flex items-center justify-center fixed z-50
+            "
     >
 
         <div class="flex flex-row justify-center items-center">
@@ -198,7 +204,11 @@
 
         </div>
     
-        <div v-if="list_notes && list_notes?.length" class="bg-transparent w-full z-50 fixed bottom-0">
+        <div
+            v-if="list_notes && list_notes?.length" 
+            class="bg-transparent w-full z-50 fixed"
+            style="bottom: env(safe-area-inset-bottom);"
+        >
             <button 
                 style="box-shadow: 0 0 15px #3636364f;" 
                 @click="create_new_note" 

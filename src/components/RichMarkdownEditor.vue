@@ -6,7 +6,14 @@
 
   <div class="fixed bottom-0 w-full z-50">
 
-    <div class="absolute bottom-0 left-2 right-2 flex flex-row gap-1 justify-between items-center bg-[#FFF8F0] border-t-1 border-[#3B3B3B] ">
+    <div 
+      class="
+              absolute left-2 right-2 
+              flex flex-row gap-1 justify-between items-center 
+              bg-[#FFF8F0] border-t-1 border-[#3B3B3B] 
+            "
+      style="bottom: env(safe-area-inset-bottom);"
+    >
 
       <ul>
         <button @click="toggleHeading(1)">H1</button>
@@ -15,8 +22,9 @@
         <button @click="toggleHeading(4)">H4</button>
       </ul>
 
-      <ul>
-        <button @click="handleCopyPaste" class="copy-svg"></button>
+      <ul class="gap-1 flex flex-row">
+        <li><button @click="if_open_color = !if_open_color" class="color-svg"></button></li>
+        <li><button @click="handleCopyPaste" class="copy-svg"></button></li>
       </ul>
 
       <ul>
@@ -29,6 +37,21 @@
     </div>
 
   </div>
+
+  <transition>
+
+    <section 
+      v-if="if_open_color"
+      class="absolute boottom-0 "
+    >
+
+      <div>
+
+      </div>
+
+    </section>
+
+  </transition>
 
 </template>
 
@@ -50,8 +73,9 @@ import db from '../assets/ts/database'
 const props = defineProps<{ id: number }>()
 
 const editor = ref<Editor | undefined>();
-const content = ref<string>('')
-const text = ref<string>('')
+const content = ref<string>('');
+const text = ref<string>('');
+const if_open_color = ref<boolean>(true);
 
 const handleCopyPaste = async () => {
 
@@ -258,6 +282,16 @@ button.active {
   background-position: center;
   cursor: pointer;
   background-image: url('/assets/svgs/copy.svg');
+}
+
+.color-svg {
+  width: 23px;
+  height: 23px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  cursor: pointer;
+  background-image: url('../assets/svgs/color.svg');
 }
 
 
