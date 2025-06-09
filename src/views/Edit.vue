@@ -1,12 +1,12 @@
 <template>
 
-  <header class="flex flex-row pt-4 relative">
+  <header class="flex flex-row relative" style="padding-top: calc(1rem + env(safe-area-inset-top));">
 
     <div class="left-arrow absolute left-4 cursor-pointer" @click="router.push('/')" :class="hitbox ? 'bg-red-600' : ''"></div>
 
     <div class="flex flex-row gap-4 absolute right-4">
 
-      <div
+      <!-- <div
         class="edit_note"
         :style="{
           backgroundImage: if_edit_note_active
@@ -15,7 +15,7 @@
         }"
         :class="hitbox ? 'bg-red-600' : ''"
         @click="change_edit_state"
-      ></div>
+      ></div> -->
 
       <div
         class="pin"
@@ -74,8 +74,8 @@ import RichMarkdownEditor from '../components/RichMarkdownEditor.vue';
 
 import pinFull from '/assets/webp/pin_plein.webp?url';
 import pinEmpty from '/assets/webp/pin_vide.webp?url';
-import edit_note_Full from '/assets/webp/note-edit_plein.webp?url';
-import edit_note_Empty from '/assets/webp/note-edit_vide.webp?url';
+// import edit_note_Full from '/assets/webp/note-edit_plein.webp?url';
+// import edit_note_Empty from '/assets/webp/note-edit_vide.webp?url';
 
 // État pour la gestion de l'édition et du pin
 const if_pin_active = ref(route.query.pinned == "true");
@@ -157,16 +157,16 @@ const change_pin_state = (): void => {
 };
 
 // Fonction pour changer l'état
-const change_edit_state = (): void => {
-  if_edit_note_active.value = !if_edit_note_active.value;
+// const change_edit_state = (): void => {
+//   if_edit_note_active.value = !if_edit_note_active.value;
 
-  router.push({ 
-    query: { 
-      ...route.query,
-      simply_edit: if_edit_note_active.value ? 'true' : 'false'
-    }
-  });
-};
+//   router.push({ 
+//     query: { 
+//       ...route.query,
+//       simply_edit: if_edit_note_active.value ? 'true' : 'false'
+//     }
+//   });
+// };
 
 </script>
 

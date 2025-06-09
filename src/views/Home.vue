@@ -2,10 +2,12 @@
 <template>
 
     <header 
-        style="font-family: 'Montserrat', sans-serif; box-shadow: 0 0 15px #36363681;" 
+        style="
+            font-family: 'Montserrat', sans-serif; 
+            box-shadow: 0 0 15px #36363681;
+            height: calc(3.5rem + env(safe-area-inset-top));
+        " 
         class="mb-5 top-0 left-0 w-full text-2xl bg-[#F28C28] text-white font-bold flex items-center justify-center fixed z-50"
-        :class="`pt-[${top_p}]`"
-        :style=" { height: `calc(3.5rem + ${top_p})` } "
     >
 
         <div class="flex flex-row justify-center items-center">
@@ -41,7 +43,7 @@
                     v-if="if_open_dropdown"
                     class="dropdown absolute right-0 bg-[#F28C28] 
                         z-50 min-w-[150px] w-[40%] flex flex-col justify-center items-center p-3"
-                    :style=" { top: `calc(3.5rem + ${top_p})` } "
+                    :style=" { top: `calc(3.5rem + env(safe-area-inset-top))` } "
                 >
                     <ul class="text-xl">
                         <li @click="router.push('/settings')">Paramètre</li>
@@ -56,7 +58,7 @@
 
     </header>
 
-    <Search_bar class="mb-4" :pt="top_p" :style=" { marginTop: `calc(4.5rem + ${top_p})` } " />
+    <Search_bar class="mb-4" pt="env(safe-area-inset-top)" :style=" { marginTop: `calc(4.5rem + env(safe-area-inset-top))` } " />
 
     <ul 
         v-if="all_tags && all_tags.length" 
@@ -267,7 +269,6 @@
 
     };
 
-    const top_p: string = '0px'; // os.isAndroid() ?  '24px' : os.isIOS() ? '44px' : '0px' => a revoir
 
     const tip: boolean = false;
     const tag_name = ref<string>('');
