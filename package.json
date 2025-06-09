@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "npm run build && node dist/index",
+    "start": "node dist/index",
     "dev": "npm run build && nodemon dist/index",
     "build": "npx tsc"
   },
@@ -15,17 +15,21 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
+  "type": "module",
   "bugs": {
     "url": "https://github.com/SilverCore-Git/silvernote/issues"
   },
   "homepage": "https://github.com/SilverCore-Git/silvernote#readme",
   "devDependencies": {
     "@types/node": "^22.15.30",
+    "@types/node-fetch": "^2.6.12",
+    "@types/unzipper": "^0.10.11",
     "typescript": "^5.8.3"
   },
   "dependencies": {
     "fs": "^0.0.1-security",
-    "path": "^0.12.7"
+    "node-fetch": "^3.3.2",
+    "path": "^0.12.7",
+    "unzipper": "^0.12.3"
   }
 }
