@@ -1,4 +1,4 @@
-name: Build iOS App
+name: Build Mobile Apps
 
 on:
   push:
@@ -55,7 +55,7 @@ jobs:
           name: Silvernote_iOS_Debug.app
           path: ios/build/outputs/App.app
 
-      - name: Create GitHub Release
+      - name: Create GitHub Release (iOS)
         uses: softprops/action-gh-release@v1
         with:
           tag_name: ios-${{ github.run_number }}
@@ -71,5 +71,66 @@ jobs:
           tag_name: ios-${{ github.run_number }}
           name: Silvernote iOS Debug ${{ github.run_number }}
           files: ios/build/outputs/App.app
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  build-android:
+    name: Android APK
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build frontend
+        run: npm run build
+
+      - name: Sync Capacitor Android
+        run: npx cap sync android
+
+      - name: Set up Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      - name: Grant execute permission to gradlew
+        run: chmod +x gradlew
+        working-directory: android
+
+      - name: Build APK
+        run: ./gradlew assembleDebug
+        working-directory: android
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: silvernote_install.apk
+          path: android/app/build/outputs/apk/debug/app-debug.apk
+
+      - name: Create GitHub Release (Android)
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: apk-${{ github.run_number }}
+          name: APK Build ${{ github.run_number }}
+          body: |
+            Nouvelle build Android générée automatiquement depuis la branche `front_mobile`.
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload APK to Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: apk-${{ github.run_number }}
+          name: Silvernote APK ${{ github.run_number }}
+          files: android/app/build/outputs/apk/debug/app-debug.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
