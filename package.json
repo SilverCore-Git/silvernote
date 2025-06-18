@@ -2,8 +2,9 @@
   "name": "silvernote",
   "private": true,
   "version": "0.0.0",
-  "type": "module",
+  "type": "commonjs",
   "scripts": {
+    "maj:front": "node scripts/maj_front",
     "sync": "npx cap sync",
     "android": "npx cap open android",
     "android_icon": "cordova-res"
@@ -12,7 +13,12 @@
     "@capacitor/android": "^7.2.0",
     "@capacitor/cli": "^7.2.0",
     "@capacitor/core": "^7.2.0",
-    "@capacitor/ios": "^7.2.0"
+    "@capacitor/ios": "^7.2.0",
+    "child_process": "^1.0.2",
+    "fs": "^0.0.1-security",
+    "path": "^0.12.7",
+    "unzipper": "^0.12.3",
+    "util": "^0.12.5"
   },
   "devDependencies": {
     "@capacitor/assets": "^3.0.5",

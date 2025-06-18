@@ -27,8 +27,8 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Build frontend
-        run: npm run build
+      - name: Get frontend
+        run: npm run maj:front
 
       - name: Sync Capacitor iOS
         run: npx cap sync ios
@@ -76,8 +76,8 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Build frontend
-        run: npm run build
+      - name: Get frontend
+        run: npm run maj:front
 
       - name: Sync Capacitor Android
         run: npx cap sync android
