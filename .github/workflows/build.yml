@@ -108,7 +108,7 @@ jobs:
           path: android/app/build/outputs/apk/debug/silvernote_android_install.apk
 
   release:
-    name: Create GitHub Release with iOS & Android artifacts
+    name: Create GitHub Release
     needs:
       - build-ios
       - build-android
