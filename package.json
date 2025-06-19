@@ -7,7 +7,7 @@
     "maj:front": "node scripts/maj_front",
     "sync": "npx cap sync",
     "android": "npx cap open android",
-    "android_icon": "cordova-res"
+    "android_icon": "npx cordova-res"
   },
   "dependencies": {
     "@capacitor/android": "^7.2.0",
