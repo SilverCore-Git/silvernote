@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - front_mobile
+      - main
 
 permissions:
   contents: write
