@@ -1,0 +1,16 @@
+{
+  "scripts": {
+
+    "start:silvernote": "npm build&start:front && npm build&start:back",
+
+    "build:front": "docker build -t front ./front",
+    "build:back": "docker build -t back ./back",
+
+    "start:front": "docker run -p 8080:8080 front",
+    "start:back": "docker run -p 3000:3000 back",
+
+    "build&start:front": "npm run build:front && npm run start:front",
+    "build&start:back": "npm run build:back && npm run start:back"
+
+  }
+}
