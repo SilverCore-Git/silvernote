@@ -4,9 +4,10 @@
     "description": "",
     "main": "app.js",
     "scripts": {
-        "start": "pm2 start app.js --name silvernote",
+        "start": "node app.js",
         "stop": "pm2 stop silvernote",
         "log": "pm2 logs silvernote",
+
         "dev": "nodemon app.js",
         "build": "npx tsc"
     },
