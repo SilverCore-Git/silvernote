@@ -8,10 +8,10 @@ router.get('/', (req, res) => {
 
 router.get('/profile', requiresAuth(), (req, res) => {
 
-    const res = req.query.res;
+    const ress = req.query.res;
     const data = req.oidc.user;
 
-    if (res == 'json') return res.json(data);
+    if (ress == 'json') return res.json(data);
 
     res.send(`
         <html>
@@ -47,8 +47,5 @@ router.get('/verify', requiresAuth(), (req, res) => {
 
 })
 
-router.get('/callback', (req, res) => {
-    res.send('callback')
-})
 
 module.exports = router;

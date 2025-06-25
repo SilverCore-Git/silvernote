@@ -12,7 +12,7 @@ const config = {
   authRequired: false,
   auth0Logout: true,
   secret: process.env.AUTH_SECRET,
-  baseURL: 'http://localhost:3033',
+  baseURL: 'https://auth.silvernote.fr',
   clientID: process.env.CLIENT_ID,
   issuerBaseURL: process.env.ISSUER_BASE_URL
 };
