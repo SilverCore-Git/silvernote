@@ -43,19 +43,44 @@
     <link rel="icon" type="image/x-icon" href="./favicon.ico" />
 
     <!-- preload -->
-    <link rel="preload" as="image" href="./assets/webp/note-edit_plein.webp" />
-    <link rel="preload" as="image" href="./assets/webp/note-edit_vide.webp" />
     <link rel="preload" as="image" href="./assets/webp/pin_plein.webp" />
     <link rel="preload" as="image" href="./assets/webp/pin_vide.webp" />
 
     <link rel="preload" as="image" href="./assets/svgs/ellipsis.svg" />
-    <link rel="preload" as="image" href="./assets/svgs/copy.svg" />
     <link rel="preload" as="image" href="./assets/svgs/moon.svg" />
     <link rel="preload" as="image" href="./assets/svgs/sun.svg" />
+    <link rel="preload" as="image" href="./assets/svgs/wifi_on.svg" />
+    <link rel="preload" as="image" href="./assets/svgs/wifi_off.svg" />
 
-    <script type="module" crossorigin src="./assets/index-DzRiS12O.js"></script>
-    <link rel="stylesheet" crossorigin href="./assets/index-OoIr88yz.css">
+    <script type="module" crossorigin src="./assets/index-D8FZdTLj.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-DygCYQ6L.css">
   </head>
+
+  <style>
+
+    * {
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+
+    *::-webkit-scrollbar {
+      display: none;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      overflow-x: hidden;
+      font-family: 'Inter', sans-serif;
+      transition: background-color 900ms;
+    }
+
+    #app {
+      min-width: 420px;
+      min-height: 500px;
+    }
+
+  </style>
 
 
   <!-- body managed by vite/vue -->
