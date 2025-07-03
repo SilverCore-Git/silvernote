@@ -1,77 +1,53 @@
-import { createRouter, createWebHashHistory, createWebHistory } from 'vue-router';
+import { createRouter, createWebHistory } from 'vue-router'
 
-import Home from './views/Home.vue';
-import Edit from './views/Edit.vue';
-import Settings from './views/Settings.vue';
-import Account from './views/Account.vue';
-import Dev from './views/Dev.vue';
+import Singin from './views/Singin.vue';
+import Singup from './views/Singup.vue';
+import UnauthorizedSignin from './views/Unauthorized-signin.vue';
+import User from './views/User.vue';
 
 const routes = [
   { 
-    path: '/', 
-    name: 'Home', 
-    component: Home,
+    path: '/sign-in', 
+    name: 'sign-in', 
+    component: Singin,
     props: {},
-    meta: { title: 'SilverNote - Home' }
+    meta: { title: 'sign in' }
   },
   { 
-    path: '/edit', 
-    name: 'Edit', 
-    component: Edit,
+    path: '/sign-up', 
+    name: 'sign-up', 
+    component: Singup,
     props: {},
-    meta: { title: 'SilverNote - Edit' }
+    meta: { title: 'sign up' }
   },
   { 
-    path: '/settings', 
-    name: 'Settings', 
-    component: Settings,
+    path: '/unauthorized-sign-in', 
+    name: 'unauthorized-sign-in', 
+    component: UnauthorizedSignin,
     props: {},
-    meta: { title: 'SilverNote - Settings' }
+    meta: { title: 'unauthorized-sign-in' }
   },
   { 
-    path: '/account', 
-    name: 'Account', 
-    component: Account,
+    path: '/user', 
+    name: 'user', 
+    component: User,
     props: {},
-    meta: { title: 'SilverNote - Account' }
-  },
-  { 
-    path: '/dev', 
-    name: 'dev', 
-    component: Dev,
-    props: {},
-    meta: { title: 'SilverNote - dev access' }
+    meta: { title: 'Profile' }
   }
 ]
 
-const isFileProtocol = window.location.protocol === 'file:'
-
 const router = createRouter({
-  history: isFileProtocol
-    ? createWebHashHistory(import.meta.env.BASE_URL)  // pour Electron local
-    : createWebHistory(import.meta.env.BASE_URL),    // pour Web/Express
+  history: createWebHistory(import.meta.env.BASE_URL),
   routes,
 });
 
-router.beforeEach((to, _from, next) => {
+router.beforeEach((to, from, next) => {
+  from;
   const title = to.meta.title as string;
-
   if (title) {
     document.title = title;
-
-    const ogTitle = document.querySelector('meta[property="og:title"]');
-    if (ogTitle) {
-      ogTitle.setAttribute('content', title);
-    } else {
-      const meta = document.createElement('meta');
-      meta.setAttribute('property', 'og:title');
-      meta.setAttribute('content', title);
-      document.head.appendChild(meta);
-    }
   }
-
   next();
 });
-
 
 export default router
