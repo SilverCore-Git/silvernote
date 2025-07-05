@@ -8,7 +8,7 @@
     "sync": "npx cap sync",
     "android": "npx cap open android",
     "android_icon": "npx cordova-res"
-  },
+  }, 
   "dependencies": {
     "@capacitor/android": "^7.2.0",
     "@capacitor/cli": "^7.2.0",
