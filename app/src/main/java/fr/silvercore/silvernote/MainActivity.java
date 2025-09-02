@@ -1,15 +1,14 @@
 package fr.silvercore.silvernote;
 
+import android.annotation.SuppressLint;
 import android.app.DownloadManager;
 import android.content.ActivityNotFoundException;
 import android.content.ClipData;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.webkit.CookieManager;
-import android.webkit.DownloadListener;
 import android.webkit.URLUtil;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
@@ -52,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
                 filePathCallback = null;
             });
 
+    @SuppressLint("SetJavaScriptEnabled")
     @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -66,14 +66,10 @@ public class MainActivity extends AppCompatActivity {
 
         webView = findViewById(R.id.webview);
 
-        // 1) Cookies persistants + tiers (si requis par l’app)
         CookieManager cm = CookieManager.getInstance();
         cm.setAcceptCookie(true);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            cm.setAcceptThirdPartyCookies(webView, true); // activer si l’app a besoin de cookies cross-site
-        }
+        cm.setAcceptThirdPartyCookies(webView, true); // activer si l’app a besoin de cookies cross-site
 
-        // 2) Paramètres WebView
         WebSettings s = webView.getSettings();
         s.setJavaScriptEnabled(true);
         s.setDomStorageEnabled(true);
@@ -81,11 +77,8 @@ public class MainActivity extends AppCompatActivity {
         s.setAllowFileAccess(true);
         s.setAllowContentAccess(true);
         s.setCacheMode(WebSettings.LOAD_DEFAULT);
-        if (Build.VERSION.SDK_INT >= 21) {
-            s.setMixedContentMode(WebSettings.MIXED_CONTENT_COMPATIBILITY_MODE);
-        }
+        s.setMixedContentMode(WebSettings.MIXED_CONTENT_COMPATIBILITY_MODE);
 
-        // 3) Navigation interne
         webView.setWebViewClient(new WebViewClient() {
             @Override public boolean shouldOverrideUrlLoading(WebView view, android.webkit.WebResourceRequest request) {
                 // Laisser l’app web gérer la navigation
@@ -93,7 +86,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // 4) File chooser pour <input type="file">
         webView.setWebChromeClient(new WebChromeClient() {
             @Override public boolean onShowFileChooser(WebView wv, ValueCallback<Uri[]> callback, FileChooserParams params) {
                 if (filePathCallback != null) filePathCallback.onReceiveValue(null);
@@ -110,23 +102,17 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // 5) Downloads via DownloadManager
-        webView.setDownloadListener(new DownloadListener() {
-            @Override public void onDownloadStart(String url, String userAgent, String contentDisposition, String mimetype, long contentLength) {
-                DownloadManager.Request req = new DownloadManager.Request(Uri.parse(url));
-                String fileName = URLUtil.guessFileName(url, contentDisposition, mimetype);
-                req.setTitle(fileName);
-                req.setDescription("Téléchargement…");
-                req.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-
-                req.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileName);
-
-                DownloadManager dm = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
-                dm.enqueue(req);
-            }
+        webView.setDownloadListener((url, userAgent, contentDisposition, mimetype, contentLength) -> {
+            DownloadManager.Request req = new DownloadManager.Request(Uri.parse(url));
+            String fileName = URLUtil.guessFileName(url, contentDisposition, mimetype);
+            req.setTitle(fileName);
+            req.setDescription("Téléchargement…");
+            req.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+            req.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileName);
+            DownloadManager dm = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
+            dm.enqueue(req);
         });
 
-        // 6) Charger l’URL
         webView.loadUrl(APP_URL);
 
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
@@ -143,7 +129,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Override protected void onPause() {
         super.onPause();
-        // Flush des cookies pour s’assurer qu’ils sont écrits sur disque
         CookieManager.getInstance().flush();
     }
 }
