@@ -55,11 +55,11 @@ public class MainActivity extends AppCompatActivity {
     @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        WindowCompat.setDecorFitsSystemWindows(getWindow(), false); // contenu sous les barres
-        View root = findViewById(android.R.id.content); // racine
+        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
+        View root = findViewById(android.R.id.content);
         ViewCompat.setOnApplyWindowInsetsListener(root, (v, insets) -> {
             int top = insets.getInsets(WindowInsetsCompat.Type.statusBars()).top;
-            v.setPadding(0, top, 0, 0); // pousse le contenu sous la status bar
+            v.setPadding(0, top - 15, 0, 0);
             return insets;
         });
         if (getSupportActionBar() != null) getSupportActionBar().hide();
@@ -68,8 +68,7 @@ public class MainActivity extends AppCompatActivity {
 
         CookieManager cm = CookieManager.getInstance();
         cm.setAcceptCookie(true);
-        cm.setAcceptThirdPartyCookies(webView, true); // activer si l’app a besoin de cookies cross-site
-
+        cm.setAcceptThirdPartyCookies(webView, true);
         WebSettings s = webView.getSettings();
         s.setJavaScriptEnabled(true);
         s.setDomStorageEnabled(true);
@@ -81,7 +80,6 @@ public class MainActivity extends AppCompatActivity {
 
         webView.setWebViewClient(new WebViewClient() {
             @Override public boolean shouldOverrideUrlLoading(WebView view, android.webkit.WebResourceRequest request) {
-                // Laisser l’app web gérer la navigation
                 return false;
             }
         });
@@ -112,7 +110,6 @@ public class MainActivity extends AppCompatActivity {
             DownloadManager dm = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
             dm.enqueue(req);
         });
-
         webView.loadUrl(APP_URL);
 
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
