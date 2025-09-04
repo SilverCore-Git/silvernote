@@ -36,17 +36,8 @@ jobs:
       - name: Assemble Debug
         run: ./gradlew :${{ env.MAIN_MODULE }}:assembleDebug
 
-      - name: Assemble Release
-        run: ./gradlew :${{ env.MAIN_MODULE }}:assembleRelease
-
       - name: Upload APK Debug
         uses: actions/upload-artifact@v4
         with:
           name: apk-debug
           path: ${{ env.MAIN_MODULE }}/build/outputs/apk/debug/*.apk
-
-      - name: Upload APK Release
-        uses: actions/upload-artifact@v4
-        with:
-          name: apk-release
-          path: ${{ env.MAIN_MODULE }}/build/outputs/apk/release/*.apk
