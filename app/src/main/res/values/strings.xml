@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Silvernote</string>
+    <string name="offline_icon_cd">Icône connexion perdue</string>
+    <string name="offline_title">Connexion au serveur échouée</string>
+    <string name="offline_message">Veuillez vérifier votre connexion et réessayer.</string>
+    <string name="offline_retry">Réessayer</string>
 </resources>

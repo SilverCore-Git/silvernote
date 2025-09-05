@@ -5,6 +5,7 @@ import android.app.DownloadManager;
 import android.content.ActivityNotFoundException;
 import android.content.ClipData;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -51,7 +52,17 @@ public class MainActivity extends AppCompatActivity {
                 filePathCallback = null;
             });
 
-    @SuppressLint("SetJavaScriptEnabled")
+    private boolean isInternetAvailable() {
+        android.net.ConnectivityManager cm = getSystemService(android.net.ConnectivityManager.class);
+        if (cm == null) return false;
+        android.net.Network current = cm.getActiveNetwork();
+        if (current == null) return false;
+        android.net.NetworkCapabilities caps = cm.getNetworkCapabilities(current);
+        return caps != null
+                && caps.hasCapability(android.net.NetworkCapabilities.NET_CAPABILITY_INTERNET)
+                && caps.hasCapability(android.net.NetworkCapabilities.NET_CAPABILITY_VALIDATED);
+    }
+
     @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -59,11 +70,30 @@ public class MainActivity extends AppCompatActivity {
         View root = findViewById(android.R.id.content);
         ViewCompat.setOnApplyWindowInsetsListener(root, (v, insets) -> {
             int top = insets.getInsets(WindowInsetsCompat.Type.statusBars()).top;
-            v.setPadding(0, top - 15, 0, 0);
+            v.setPadding(0, top - 25, 0, 0);
+            v.setBackgroundColor(Color.parseColor("#F28C28"));
             return insets;
         });
         if (getSupportActionBar() != null) getSupportActionBar().hide();
 
+        if(isInternetAvailable()) {
+            SetUpWebView();
+        } else {
+            setContentView(R.layout.offline_view);
+            findViewById(R.id.btn_retry).setOnClickListener(v -> {
+                System.out.println("Retry button clicked");
+                if(isInternetAvailable()) {
+                    setContentView(R.layout.activity_main);
+                    SetUpWebView();
+                } else {
+                    Toast.makeText(MainActivity.this, "Pas de connexion internet", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+    }
+
+    @SuppressLint("SetJavaScriptEnabled")
+    protected void SetUpWebView() {
         webView = findViewById(R.id.webview);
 
         CookieManager cm = CookieManager.getInstance();
