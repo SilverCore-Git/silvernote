@@ -1,9 +1,12 @@
-name: Generate android Debug APK
+name: Android APK from flutter 
 
 on:
   push:
-    branches: [ main ]
+    branches: front_mobile_flutter
   workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
   build-debug-apk:
