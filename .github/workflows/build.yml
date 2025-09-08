@@ -44,10 +44,11 @@ jobs:
         run: mv build/app/outputs/flutter-apk/app-debug.apk build/app/outputs/flutter-apk/silvernote-${{ steps.get_version.outputs.VERSION }}-android-debug.apk
           
 
-      - name: Get version from package.json
+      - name: Get version from pubspec.yaml
         id: get_version
         run: |
-          echo "VERSION=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
+          VERSION=$(grep '^version:' pubspec.yaml | sed 's/version: //; s/+.*//')
+          echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
@@ -59,7 +60,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Upload zipped build to Release
+      - name: Upload build to Release
         uses: softprops/action-gh-release@v1
         with:
           tag_name: v${{ steps.get_version.outputs.VERSION }}
