@@ -40,15 +40,16 @@ jobs:
           path: build/app/outputs/flutter-apk/app-debug.apk
           if-no-files-found: error
 
-      - name: Rename APK with version
-        run: mv build/app/outputs/flutter-apk/app-debug.apk build/app/outputs/flutter-apk/silvernote-${{ steps.get_version.outputs.VERSION }}-android-debug.apk
-          
 
       - name: Get version from pubspec.yaml
         id: get_version
         run: |
           VERSION=$(grep '^version:' pubspec.yaml | sed 's/version: //; s/+.*//')
           echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Rename APK with version
+        run: mv build/app/outputs/flutter-apk/app-debug.apk build/app/outputs/flutter-apk/silvernote-${{ steps.get_version.outputs.VERSION }}-android-debug.apk
+          
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
