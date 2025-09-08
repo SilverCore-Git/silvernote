@@ -39,3 +39,32 @@ jobs:
           name: app-debug-apk
           path: build/app/outputs/flutter-apk/app-debug.apk
           if-no-files-found: error
+          
+
+      - name: Get version from package.json
+        id: get_version
+        run: |
+          echo "VERSION=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
+
+      - name: Archive build output
+        run: |
+          mkdir release
+          zip -r build/app/outputs/flutter-apk/app-debug.apk dist/
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: v${{ steps.get_version.outputs.VERSION }}
+          name: Silvernote (${{ steps.get_version.outputs.VERSION }})
+          body: |
+            Nouvelle version de Silvernote.
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload zipped build to Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: v${{ steps.get_version.outputs.VERSION }}
+          files: build/app/outputs/flutter-apk/silvernote-${{ steps.get_version.outputs.VERSION }}-android-debug.apk
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
