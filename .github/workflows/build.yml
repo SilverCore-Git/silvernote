@@ -39,17 +39,15 @@ jobs:
           name: app-debug-apk
           path: build/app/outputs/flutter-apk/app-debug.apk
           if-no-files-found: error
+
+      - name: Rename APK with version
+        run: mv build/app/outputs/flutter-apk/app-debug.apk build/app/outputs/flutter-apk/silvernote-${{ steps.get_version.outputs.VERSION }}-android-debug.apk
           
 
       - name: Get version from package.json
         id: get_version
         run: |
           echo "VERSION=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
-
-      - name: Archive build output
-        run: |
-          mkdir release
-          zip -r build/app/outputs/flutter-apk/app-debug.apk dist/
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
